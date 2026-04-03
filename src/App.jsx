@@ -662,7 +662,10 @@ const ProjectsView = () => {
               <GlowingBorder rounding="rounded-xl" glowColor={project.glowColor} className="h-full" innerClassName="flex flex-col bg-slate-900/50 backdrop-blur-sm">
                 <div className={`h-32 bg-gradient-to-br ${project.color} border-b border-slate-800/50 relative overflow-hidden flex items-center justify-center`}>
                   <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMWUyOTNiIi8+CjxwYXRoIGQ9Ik0wIDBMNCA0Wk00IDBMMCA0WiIgc3Ryb2tlPSIjMGYxNzJhIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+')] opacity-20" />
-                  <project.icon size={48} className="text-white/50 group-hover:scale-110 group-hover:text-white transition-all duration-500 drop-shadow-lg relative z-10" />
+                  {(() => {
+                    const ProjectIcon = project.icon || FolderGit2;
+                    return <ProjectIcon size={48} className="text-white/70 group-hover:scale-110 group-hover:text-white transition-all duration-500 drop-shadow-lg relative z-10" />;
+                  })()}
                 </div>
 
                 <div className="p-6 flex flex-col justify-between h-[calc(100%-8rem)]">
