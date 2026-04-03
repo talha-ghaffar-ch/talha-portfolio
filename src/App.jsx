@@ -3,8 +3,7 @@ import {
   Terminal, Shield, Activity, Cloud,
   Lock, Code, Database,
   Copy, CheckCircle, Briefcase, GraduationCap,
-  FolderGit2, TerminalSquare, ExternalLink, Cpu, Star, CalendarDays, ArrowRight, Sparkles,
-  MessageCircle, SendHorizontal, X, Bot
+  FolderGit2, TerminalSquare, ExternalLink, Cpu, Star, CalendarDays, ArrowRight, Sparkles
 } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 
@@ -977,115 +976,6 @@ const VaultView = () => {
   );
 };
 
-const AIChatWidget = () => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [input, setInput] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
-  const [messages, setMessages] = useState([
-    {
-      role: 'assistant',
-      content: 'Hi! I am Talha\'s AI assistant. Ask me about services, certifications, projects, or how to contact Talha.',
-    },
-  ]);
-
-  const chatApiUrl = import.meta.env.VITE_CHAT_API_URL || '/api/chat';
-
-  const sendMessage = async () => {
-    const text = input.trim();
-    if (!text || isLoading) return;
-
-    const nextMessages = [...messages, { role: 'user', content: text }];
-    setMessages(nextMessages);
-    setInput('');
-    setIsLoading(true);
-
-    try {
-      const response = await fetch(chatApiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          messages: nextMessages.map((m) => ({ role: m.role, content: m.content })),
-        }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Chat request failed.');
-      }
-
-      setMessages((prev) => [...prev, { role: 'assistant', content: data.reply || 'No response generated.' }]);
-    } catch (error) {
-      setMessages((prev) => [...prev, { role: 'assistant', content: `Error: ${error.message}` }]);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  return (
-    <>
-      <button
-        onClick={() => setIsOpen((v) => !v)}
-        className="fixed right-4 md:right-6 bottom-24 md:bottom-6 z-[70] rounded-full border border-cyan-300/60 bg-slate-900/90 p-3 text-cyan-200 shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:text-white hover:border-cyan-200 transition-all"
-        aria-label="Open AI chat"
-      >
-        {isOpen ? <X size={20} /> : <MessageCircle size={20} />}
-      </button>
-
-      {isOpen && (
-        <div className="fixed right-4 md:right-6 bottom-40 md:bottom-20 z-[70] w-[calc(100vw-2rem)] max-w-sm rounded-2xl border border-slate-700 bg-[#0b0e13]/95 backdrop-blur-md shadow-[0_0_35px_rgba(6,182,212,0.22)] overflow-hidden">
-          <div className="flex items-center justify-between px-4 py-3 border-b border-slate-700/70">
-            <div className="inline-flex items-center gap-2 text-cyan-200">
-              <Bot size={16} />
-              <span className="text-sm font-semibold">Ask Talha AI</span>
-            </div>
-            <span className="text-[10px] font-mono text-emerald-300">BETA</span>
-          </div>
-
-          <div className="h-72 overflow-y-auto px-3 py-3 space-y-2">
-            {messages.map((message, idx) => (
-              <div
-                key={`${message.role}-${idx}`}
-                className={`max-w-[90%] px-3 py-2 rounded-lg text-sm leading-relaxed ${
-                  message.role === 'user'
-                    ? 'ml-auto bg-cyan-500/20 border border-cyan-500/40 text-cyan-100'
-                    : 'mr-auto bg-slate-800/90 border border-slate-700 text-slate-200'
-                }`}
-              >
-                {message.content}
-              </div>
-            ))}
-            {isLoading && (
-              <div className="mr-auto max-w-[90%] px-3 py-2 rounded-lg text-sm bg-slate-800/90 border border-slate-700 text-slate-300 animate-pulse">
-                Thinking...
-              </div>
-            )}
-          </div>
-
-          <div className="p-3 border-t border-slate-700/70 flex items-center gap-2">
-            <input
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') sendMessage();
-              }}
-              placeholder="Ask about services, projects, certs..."
-              className="flex-1 rounded-lg border border-slate-600 bg-slate-900 px-3 py-2 text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-cyan-400"
-            />
-            <button
-              onClick={sendMessage}
-              disabled={isLoading || !input.trim()}
-              className="inline-flex items-center justify-center rounded-lg border border-emerald-500/60 bg-emerald-500/15 p-2 text-emerald-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-emerald-500/25"
-              aria-label="Send message"
-            >
-              <SendHorizontal size={16} />
-            </button>
-          </div>
-        </div>
-      )}
-    </>
-  );
-};
-
 export default function App() {
   const [activeView, setActiveView] = useState('home');
 
@@ -1201,8 +1091,6 @@ export default function App() {
           ))}
         </div>
       </nav>
-
-      <AIChatWidget />
 
       <style dangerouslySetInnerHTML={{ __html: `
         @keyframes shimmer {
