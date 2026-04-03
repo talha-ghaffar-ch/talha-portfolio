@@ -382,7 +382,7 @@ const HomeView = ({ onNavigate }) => {
   const currentRole = useTypewriter(roles, 60, 2500);
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center pt-24 md:pt-20">
+    <div className="min-h-[85vh] flex flex-col justify-center pt-20 md:pt-20">
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center md:items-start">
         <div className="md:col-span-7 space-y-6 lg:space-y-8">
           <FadeIn delay={100}>
@@ -393,7 +393,7 @@ const HomeView = ({ onNavigate }) => {
           </FadeIn>
 
           <FadeIn delay={200}>
-            <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight relative">
+            <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight relative">
               <span className="absolute -inset-x-8 -inset-y-6 -z-10 bg-[radial-gradient(circle_at_40%_50%,rgba(6,182,212,0.20),transparent_52%)] animate-[heroGlow_6s_ease-in-out_infinite]" />
               <span className="block text-slate-100">TALHA</span>
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300 drop-shadow-[0_0_20px_rgba(6,182,212,0.45)]">
@@ -402,8 +402,8 @@ const HomeView = ({ onNavigate }) => {
             </h1>
           </FadeIn>
 
-          <FadeIn delay={300} className="h-8 md:h-12">
-            <p className="text-lg md:text-xl font-mono text-slate-400 flex items-center gap-2">
+          <FadeIn delay={300} className="h-10 md:h-12">
+            <p className="text-base sm:text-lg md:text-xl font-mono text-slate-300 flex items-center gap-2">
               <span className="text-emerald-500">Specializing in:</span>
               <span className="text-slate-200">{currentRole}</span>
               <span className="w-2 h-5 bg-emerald-500 animate-[pulse_1s_infinite]" />
@@ -411,20 +411,20 @@ const HomeView = ({ onNavigate }) => {
           </FadeIn>
 
           <FadeIn delay={400}>
-            <p className="text-slate-200 max-w-xl leading-relaxed text-lg border-l-2 border-cyan-500/30 pl-4">
+            <p className="text-slate-200 max-w-xl leading-relaxed text-base sm:text-lg border-l-2 border-cyan-500/30 pl-4">
               I help businesses secure their systems, improve cloud infrastructure, and solve technical problems with clear and practical solutions.
             </p>
           </FadeIn>
 
           <FadeIn delay={470}>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 max-w-2xl">
               {[
                 { label: 'GitHub Repos', value: 'Live Sync' },
                 { label: 'Certifications', value: '03+' },
                 { label: 'Focus', value: 'Security' },
                 { label: 'Status', value: 'Available' }
               ].map((metric) => (
-                <div key={metric.label} className="rounded-lg border border-slate-700/90 bg-slate-900/65 px-3 py-2 backdrop-blur-sm hover:border-cyan-400/50 transition-colors duration-300">
+                <div key={metric.label} className="rounded-lg border border-slate-700/90 bg-slate-900/65 px-2.5 sm:px-3 py-2 backdrop-blur-sm hover:border-cyan-400/50 transition-colors duration-300">
                   <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500">{metric.label}</p>
                   <p className="text-sm font-semibold text-slate-100">{metric.value}</p>
                 </div>
@@ -432,13 +432,13 @@ const HomeView = ({ onNavigate }) => {
             </div>
           </FadeIn>
 
-          <FadeIn delay={500} className="pt-2 flex flex-wrap gap-4 items-center">
-            <div className="flex flex-wrap gap-3 items-center">
+          <FadeIn delay={500} className="pt-2 flex flex-wrap gap-3 items-center">
+            <div className="flex w-full sm:w-auto flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 items-stretch sm:items-center">
               <a
                 href="https://www.linkedin.com/in/talha-ghaffar/"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-emerald-400/70 bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/30 hover:border-emerald-200 transition-all text-sm font-semibold shadow-[0_0_12px_rgba(16,185,129,0.25)]"
+                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-emerald-400/70 bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/30 hover:border-emerald-200 transition-all text-sm font-semibold shadow-[0_0_12px_rgba(16,185,129,0.25)]"
               >
                 Let&apos;s Work Together
                 <ArrowRight size={15} />
@@ -449,14 +449,14 @@ const HomeView = ({ onNavigate }) => {
                   e.preventDefault();
                   onNavigate('projects');
                 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-slate-600 bg-slate-900/85 text-slate-100 hover:text-white hover:border-cyan-300 transition-all text-sm"
+                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-slate-600 bg-slate-900/85 text-slate-100 hover:text-white hover:border-cyan-300 transition-all text-sm"
               >
                 Explore Projects
                 <Sparkles size={14} className="text-cyan-400" />
               </a>
             </div>
 
-            <div className="flex gap-4 ml-2">
+            <div className="flex gap-3 ml-0 sm:ml-2">
               <a href="https://github.com/talha-ghaffar-ch" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-700 hover:border-white hover:text-white text-slate-300 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.22)]">
                 <FaGithub size={20} />
               </a>
@@ -996,7 +996,7 @@ export default function App() {
       </div>
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div
             onClick={() => setActiveView('home')}
             className="font-mono font-bold text-xl tracking-tighter text-white flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
@@ -1040,7 +1040,7 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-32 min-h-screen flex flex-col">
+      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-32 min-h-screen flex flex-col">
         <div key={activeView} className="flex-1 animate-[fadeIn_0.5s_ease-out]">
           {activeView === 'home' && <HomeView onNavigate={setActiveView} />}
           {activeView === 'about' && <AboutView />}
@@ -1064,12 +1064,12 @@ export default function App() {
       </main>
 
       <nav className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#0a0a0a]/90 backdrop-blur-xl border-t border-slate-800 p-2 pb-safe">
-        <div className="flex justify-around items-center h-14">
+        <div className="flex justify-around items-center h-16">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => setActiveView(item.id)}
-              className={`relative flex flex-col items-center justify-center w-full h-full space-y-1 rounded-md transition-all duration-300 ${
+              className={`relative flex flex-col items-center justify-center w-full h-full space-y-1 rounded-md transition-all duration-300 px-1 ${
                 activeView === item.id
                   ? 'text-emerald-300 bg-emerald-500/10 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
                   : 'text-slate-500 border border-transparent hover:text-slate-300 hover:bg-slate-900/60'
@@ -1080,7 +1080,7 @@ export default function App() {
                 {activeView === item.id && <span className="absolute -inset-2 rounded-full border border-emerald-400/70 animate-[pulseRing_1.8s_ease-in-out_infinite]" />}
                 <item.icon size={20} />
               </span>
-              <span className="text-[10px] font-mono">{item.label}</span>
+              <span className="text-[11px] font-mono leading-none">{item.label}</span>
             </button>
           ))}
         </div>
