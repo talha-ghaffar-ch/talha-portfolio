@@ -999,10 +999,16 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
           <div
             onClick={() => setActiveView('home')}
-            className="font-mono font-bold text-xl tracking-tighter text-white flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity"
+            className="group flex items-center gap-2.5 cursor-pointer transition-opacity hover:opacity-90"
           >
-            <Shield size={22} className="text-emerald-500" />
-            TG<span className="text-emerald-500 -ml-1">.</span>
+            <div className="relative h-7 w-7 rounded-md border border-emerald-400/70 bg-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.2)]">
+              <span className="absolute inset-1 rounded-sm bg-emerald-400/80 animate-[brandPulse_2.2s_ease-in-out_infinite]" />
+              <span className="absolute inset-0 rounded-md border border-cyan-300/40 opacity-0 group-hover:opacity-100 transition-opacity" />
+            </div>
+            <div className="leading-tight">
+              <span className="block text-[13px] sm:text-sm font-semibold tracking-wide text-white">Talha Ghaffar</span>
+              <span className="block text-[10px] font-mono text-cyan-300/85">security.cloud.ops</span>
+            </div>
           </div>
 
           <GlowingBorder rounding="rounded-lg" className="hidden md:block min-w-[360px]" innerClassName="bg-slate-900/80">
@@ -1143,6 +1149,10 @@ export default function App() {
         @keyframes pulseRing {
           0%, 100% { opacity: 0.3; transform: scale(0.85); }
           50% { opacity: 0.9; transform: scale(1.15); }
+        }
+        @keyframes brandPulse {
+          0%, 100% { transform: scale(0.82); opacity: 0.7; }
+          50% { transform: scale(1); opacity: 1; }
         }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         @media (prefers-reduced-motion: reduce) {
