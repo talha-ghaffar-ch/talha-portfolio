@@ -1,4 +1,11 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&family=Sora:wght@600;700;800&display=swap');
 @import "tailwindcss";
+
+:root {
+  --font-display: 'Sora', 'Segoe UI', sans-serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+}
 
 html,
 body,
@@ -7,4 +14,17 @@ body,
   padding: 0;
   width: 100%;
   min-height: 100%;
+}
+
+body {
+  font-family: var(--font-body);
+  background: radial-gradient(circle at 20% 10%, rgba(14, 165, 233, 0.06), transparent 35%), radial-gradient(circle at 90% 90%, rgba(16, 185, 129, 0.08), transparent 40%), #050505;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
 }
