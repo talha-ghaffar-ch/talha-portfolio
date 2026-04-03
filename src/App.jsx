@@ -372,7 +372,7 @@ const SkillsMarquee = () => {
   );
 };
 
-const HomeView = () => {
+const HomeView = ({ onNavigate }) => {
   const roles = [
     'Cloud Solutions Architect',
     'Certified Ethical Hacker',
@@ -451,7 +451,7 @@ const HomeView = () => {
                 href="#projects"
                 onClick={(e) => {
                   e.preventDefault();
-                  setTimeout(() => window.scrollTo({ top: 0, behavior: 'smooth' }), 80);
+                  onNavigate('projects');
                 }}
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-slate-700 bg-slate-900/80 text-slate-200 hover:text-white hover:border-cyan-400 transition-all text-sm"
               >
@@ -1022,7 +1022,7 @@ export default function App() {
 
       <main className="relative z-10 max-w-6xl mx-auto px-6 pt-24 pb-32 min-h-screen flex flex-col">
         <div key={activeView} className="flex-1 animate-[fadeIn_0.5s_ease-out]">
-          {activeView === 'home' && <HomeView />}
+          {activeView === 'home' && <HomeView onNavigate={setActiveView} />}
           {activeView === 'about' && <AboutView />}
           {activeView === 'projects' && <ProjectsView />}
           {activeView === 'vault' && <VaultView />}
