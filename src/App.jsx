@@ -247,7 +247,7 @@ const InteractiveBackground = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-15" />;
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-20" />;
 };
 
 const DecryptButton = ({ text, onClick, icon: Icon }) => {
@@ -386,16 +386,17 @@ const HomeView = ({ onNavigate }) => {
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center md:items-start">
         <div className="md:col-span-7 space-y-6 lg:space-y-8">
           <FadeIn delay={100}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 border border-emerald-500/40 backdrop-blur-md shadow-[0_0_15px_rgba(16,185,129,0.15)]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-[ping_2s_infinite]" />
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 border border-emerald-400/60 backdrop-blur-md shadow-[0_0_18px_rgba(16,185,129,0.28)]">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-[pulseGlow_1.6s_ease-in-out_infinite]" />
               <span className="text-xs font-mono text-emerald-100">Available for Freelance and Full-Time Roles</span>
             </div>
           </FadeIn>
 
           <FadeIn delay={200}>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight relative">
+              <span className="absolute -inset-x-8 -inset-y-6 -z-10 bg-[radial-gradient(circle_at_40%_50%,rgba(6,182,212,0.20),transparent_52%)] animate-[heroGlow_6s_ease-in-out_infinite]" />
               <span className="block text-slate-100">TALHA</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300 drop-shadow-[0_0_20px_rgba(6,182,212,0.45)]">
                 GHAFFAR.
               </span>
             </h1>
@@ -410,7 +411,7 @@ const HomeView = ({ onNavigate }) => {
           </FadeIn>
 
           <FadeIn delay={400}>
-            <p className="text-slate-300 max-w-xl leading-relaxed text-lg border-l-2 border-slate-800 pl-4">
+            <p className="text-slate-200 max-w-xl leading-relaxed text-lg border-l-2 border-cyan-500/30 pl-4">
               I help businesses secure their systems, improve cloud infrastructure, and solve technical problems with clear and practical solutions.
             </p>
           </FadeIn>
@@ -423,9 +424,9 @@ const HomeView = ({ onNavigate }) => {
                 { label: 'Focus', value: 'Security' },
                 { label: 'Status', value: 'Available' }
               ].map((metric) => (
-                <div key={metric.label} className="rounded-lg border border-slate-800/80 bg-slate-900/50 px-3 py-2 backdrop-blur-sm">
+                <div key={metric.label} className="rounded-lg border border-slate-700/90 bg-slate-900/65 px-3 py-2 backdrop-blur-sm hover:border-cyan-400/50 transition-colors duration-300">
                   <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500">{metric.label}</p>
-                  <p className="text-sm font-semibold text-slate-200">{metric.value}</p>
+                  <p className="text-sm font-semibold text-slate-100">{metric.value}</p>
                 </div>
               ))}
             </div>
@@ -437,7 +438,7 @@ const HomeView = ({ onNavigate }) => {
                 href="https://www.linkedin.com/in/talha-ghaffar/"
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-emerald-500/50 bg-emerald-500/10 text-emerald-200 hover:bg-emerald-500/20 hover:border-emerald-300 transition-all text-sm font-semibold"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-emerald-400/70 bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/30 hover:border-emerald-200 transition-all text-sm font-semibold shadow-[0_0_12px_rgba(16,185,129,0.25)]"
               >
                 Let&apos;s Work Together
                 <ArrowRight size={15} />
@@ -448,7 +449,7 @@ const HomeView = ({ onNavigate }) => {
                   e.preventDefault();
                   onNavigate('projects');
                 }}
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-slate-700 bg-slate-900/80 text-slate-200 hover:text-white hover:border-cyan-400 transition-all text-sm"
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-slate-600 bg-slate-900/85 text-slate-100 hover:text-white hover:border-cyan-300 transition-all text-sm"
               >
                 Explore Projects
                 <Sparkles size={14} className="text-cyan-400" />
@@ -456,10 +457,10 @@ const HomeView = ({ onNavigate }) => {
             </div>
 
             <div className="flex gap-4 ml-2">
-              <a href="https://github.com/talha-ghaffar-ch" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-800 hover:border-white hover:text-white text-slate-400 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+              <a href="https://github.com/talha-ghaffar-ch" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-700 hover:border-white hover:text-white text-slate-300 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.22)]">
                 <FaGithub size={20} />
               </a>
-              <a href="https://www.linkedin.com/in/talha-ghaffar/" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-800 hover:border-cyan-400 hover:text-cyan-400 text-slate-400 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(34,211,238,0.3)]">
+              <a href="https://www.linkedin.com/in/talha-ghaffar/" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-700 hover:border-cyan-300 hover:text-cyan-300 text-slate-300 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(34,211,238,0.35)]">
                 <FaLinkedinIn size={20} />
               </a>
             </div>
@@ -755,11 +756,12 @@ const ProjectsView = () => {
           <FadeIn key={i} delay={i * 150}>
             <TiltCard glowColor="rgba(0,0,0,0)" className="h-full">
               <GlowingBorder rounding="rounded-xl" glowColor={project.glowColor} className="h-full" innerClassName="flex flex-col bg-slate-900/50 backdrop-blur-sm">
+                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-300/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className={`h-32 bg-gradient-to-br ${project.color} border-b border-slate-800/50 relative overflow-hidden flex items-center justify-center`}>
                   <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMWUyOTNiIi8+CjxwYXRoIGQ9Ik0wIDBMNCA0Wk00IDBMMCA0WiIgc3Ryb2tlPSIjMGYxNzJhIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+')] opacity-20" />
                   {(() => {
                     const ProjectIcon = project.icon || FolderGit2;
-                    return <ProjectIcon size={48} className="text-white/70 group-hover:scale-110 group-hover:text-white transition-all duration-500 drop-shadow-lg relative z-10" />;
+                    return <ProjectIcon size={48} className="text-white/80 group-hover:scale-110 group-hover:text-white group-hover:rotate-3 transition-all duration-500 drop-shadow-lg relative z-10" />;
                   })()}
                 </div>
 
@@ -896,8 +898,9 @@ const VaultView = () => {
                           href={cert.verifyLink}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-emerald-500/40 text-emerald-300 hover:text-emerald-200 hover:border-emerald-300 hover:bg-emerald-500/10 transition-all text-xs font-mono"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-emerald-500/50 text-emerald-200 hover:text-emerald-100 hover:border-emerald-300 hover:bg-emerald-500/15 transition-all text-xs font-mono shadow-[0_0_10px_rgba(16,185,129,0.15)]"
                         >
+                          <CheckCircle size={12} className="animate-[verifyPop_1.8s_ease-in-out_infinite]" />
                           Verify Certificate
                           <ExternalLink size={12} />
                         </a>
@@ -1015,12 +1018,13 @@ export default function App() {
                 <button
                   key={item.id}
                   onClick={() => setActiveView(item.id)}
-                  className={`relative z-10 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md font-mono text-xs transition-all duration-300 ${
+                  className={`group relative z-10 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md font-mono text-xs transition-all duration-300 overflow-hidden ${
                     activeView === item.id
                       ? 'text-emerald-300'
                       : 'text-slate-400 hover:text-emerald-200'
                   }`}
                 >
+                  <span className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent group-hover:animate-[navSweep_0.8s_ease-out]" />
                   <item.icon size={14} className={activeView === item.id ? 'text-emerald-500' : 'text-slate-500'} />
                   {item.label}
                 </button>
@@ -1072,7 +1076,10 @@ export default function App() {
               }`}
             >
               {activeView === item.id && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-emerald-400 rounded-full" />}
-              <item.icon size={20} />
+              <span className="relative">
+                {activeView === item.id && <span className="absolute -inset-2 rounded-full border border-emerald-400/70 animate-[pulseRing_1.8s_ease-in-out_infinite]" />}
+                <item.icon size={20} />
+              </span>
               <span className="text-[10px] font-mono">{item.label}</span>
             </button>
           ))}
@@ -1116,6 +1123,26 @@ export default function App() {
         @keyframes scanLine {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(500%); }
+        }
+        @keyframes pulseGlow {
+          0%, 100% { box-shadow: 0 0 0 rgba(16,185,129,0.2); opacity: 0.85; }
+          50% { box-shadow: 0 0 12px rgba(16,185,129,0.9); opacity: 1; }
+        }
+        @keyframes heroGlow {
+          0%, 100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 1; transform: scale(1.04); }
+        }
+        @keyframes navSweep {
+          from { transform: translateX(0); }
+          to { transform: translateX(320%); }
+        }
+        @keyframes verifyPop {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.18); }
+        }
+        @keyframes pulseRing {
+          0%, 100% { opacity: 0.3; transform: scale(0.85); }
+          50% { opacity: 0.9; transform: scale(1.15); }
         }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         @media (prefers-reduced-motion: reduce) {
