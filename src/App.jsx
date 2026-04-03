@@ -7,6 +7,11 @@ import {
 } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 
+const isMobileViewport = () => {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(max-width: 767px)').matches;
+};
+
 const useTypewriter = (words, speed = 80, delay = 2000) => {
   const [text, setText] = useState('');
   const [wordIndex, setWordIndex] = useState(0);
@@ -85,8 +90,13 @@ const FadeIn = ({ children, delay = 0, direction = 'up', className = '' }) => {
 };
 
 const TiltCard = ({ children, className = '', glowColor = 'rgba(16, 185, 129, 0.15)' }) => {
+  const mobile = isMobileViewport();
   const [style, setStyle] = useState({});
   const cardRef = useRef(null);
+
+  if (mobile) {
+    return <div className={className}>{children}</div>;
+  }
 
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -123,15 +133,19 @@ const TiltCard = ({ children, className = '', glowColor = 'rgba(16, 185, 129, 0.
 };
 
 const GlowingBorder = ({ children, className = '', innerClassName = '', rounding = 'rounded-xl', glowColor = '#10b981' }) => {
+  const mobile = isMobileViewport();
+
   return (
     <div className={`relative p-[1px] overflow-hidden group ${rounding} ${className}`}>
       <div className={`absolute inset-0 bg-slate-800/50 ${rounding}`} />
-      <div
-        className="absolute inset-[-300%] animate-[spin_4s_linear_infinite] opacity-50 group-hover:opacity-100 transition-opacity duration-500"
-        style={{
-          background: `conic-gradient(from 90deg at 50% 50%, transparent 0%, transparent 25%, ${glowColor} 50%, transparent 75%, transparent 100%)`
-        }}
-      />
+      {!mobile && (
+        <div
+          className="absolute inset-[-300%] animate-[spin_4s_linear_infinite] opacity-50 group-hover:opacity-100 transition-opacity duration-500"
+          style={{
+            background: `conic-gradient(from 90deg at 50% 50%, transparent 0%, transparent 25%, ${glowColor} 50%, transparent 75%, transparent 100%)`
+          }}
+        />
+      )}
       <div className={`relative h-full w-full bg-[#050505] ${rounding} ${innerClassName}`}>
         {children}
       </div>
@@ -149,6 +163,8 @@ const InteractiveBackground = () => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
+    if (isMobileViewport()) return undefined;
+
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     let animationFrameId;
@@ -246,6 +262,8 @@ const InteractiveBackground = () => {
       cancelAnimationFrame(animationFrameId);
     };
   }, []);
+
+  if (isMobileViewport()) return null;
 
   return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-20" />;
 };
@@ -372,7 +390,7 @@ const SkillsMarquee = () => {
   );
 };
 
-const HomeView = ({ onNavigate }) => {
+const HomeView = ({ onNavigate, isMobile }) => {
   const roles = [
     'Cloud Solutions Architect',
     'Certified Ethical Hacker',
@@ -380,6 +398,90 @@ const HomeView = ({ onNavigate }) => {
     'Security Analyst'
   ];
   const currentRole = useTypewriter(roles, 60, 2500);
+
+  if (isMobile) {
+    return (
+      <div className="space-y-6 pt-6">
+        <FadeIn delay={100}>
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 border border-emerald-400/60 backdrop-blur-md shadow-[0_0_18px_rgba(16,185,129,0.28)]">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-[pulseGlow_1.6s_ease-in-out_infinite]" />
+            <span className="text-xs font-mono text-emerald-100">Available for Freelance and Full-Time Roles</span>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={200}>
+          <h1 className="text-4xl font-extrabold tracking-tight text-white leading-tight">
+            <span className="block text-slate-100">TALHA</span>
+            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300 drop-shadow-[0_0_20px_rgba(6,182,212,0.45)]">
+              GHAFFAR.
+            </span>
+          </h1>
+        </FadeIn>
+
+        <FadeIn delay={300}>
+          <p className="text-base font-mono text-slate-300 flex items-start gap-2">
+            <span className="text-emerald-500 shrink-0">Specializing in:</span>
+            <span className="text-slate-200 leading-relaxed">{currentRole}</span>
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={400}>
+          <p className="text-slate-200 leading-relaxed text-base border-l-2 border-cyan-500/30 pl-4">
+            I help businesses secure their systems, improve cloud infrastructure, and solve technical problems with clear and practical solutions.
+          </p>
+        </FadeIn>
+
+        <FadeIn delay={470}>
+          <div className="grid grid-cols-2 gap-2">
+            {[
+              { label: 'Repos', value: 'Live Sync' },
+              { label: 'Certs', value: '03+' },
+              { label: 'Focus', value: 'Security' },
+              { label: 'Status', value: 'Available' }
+            ].map((metric) => (
+              <div key={metric.label} className="rounded-lg border border-slate-700/90 bg-slate-900/65 px-2.5 py-2 backdrop-blur-sm">
+                <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500">{metric.label}</p>
+                <p className="text-sm font-semibold text-slate-100">{metric.value}</p>
+              </div>
+            ))}
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={500} className="space-y-3">
+          <a
+            href="https://www.linkedin.com/in/talha-ghaffar/"
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex w-full justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-emerald-400/70 bg-emerald-500/15 text-emerald-100 text-sm font-semibold"
+          >
+            Let&apos;s Work Together
+            <ArrowRight size={15} />
+          </a>
+          <a
+            href="#projects"
+            onClick={(e) => {
+              e.preventDefault();
+              onNavigate('projects');
+            }}
+            className="inline-flex w-full justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-slate-600 bg-slate-900/85 text-slate-100 text-sm"
+          >
+            Explore Projects
+            <Sparkles size={14} className="text-cyan-400" />
+          </a>
+        </FadeIn>
+
+        <FadeIn delay={600}>
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 shadow-lg">
+            <img
+              src="/photo.png"
+              alt="Talha Ghaffar"
+              className="h-64 w-full rounded-xl object-cover"
+            />
+          </div>
+        </FadeIn>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-[85vh] flex flex-col justify-center pt-20 md:pt-20">
@@ -978,6 +1080,7 @@ const VaultView = () => {
 
 export default function App() {
   const [activeView, setActiveView] = useState('home');
+  const mobile = isMobileViewport();
 
   const navItems = [
     { id: 'home', label: 'HOME', icon: Terminal },
@@ -989,7 +1092,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-[#050505] text-slate-200 selection:bg-emerald-500/30 selection:text-emerald-200 font-sans relative">
-      <InteractiveBackground />
+      {!mobile && <InteractiveBackground />}
       <div className="pointer-events-none fixed inset-0 z-[1]">
         <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-cyan-500/10 blur-[90px]" />
         <div className="absolute top-1/3 -right-28 h-80 w-80 rounded-full bg-emerald-500/10 blur-[110px]" />
@@ -1048,7 +1151,7 @@ export default function App() {
 
       <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-32 min-h-screen flex flex-col">
         <div key={activeView} className="flex-1 animate-[fadeIn_0.5s_ease-out]">
-          {activeView === 'home' && <HomeView onNavigate={setActiveView} />}
+          {activeView === 'home' && <HomeView onNavigate={setActiveView} isMobile={mobile} />}
           {activeView === 'about' && <AboutView />}
           {activeView === 'projects' && <ProjectsView />}
           {activeView === 'vault' && <VaultView />}
