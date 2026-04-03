@@ -12,12 +12,14 @@ const isMobileViewport = () => {
   return window.matchMedia('(max-width: 767px)').matches;
 };
 
-const useTypewriter = (words, speed = 80, delay = 2000) => {
-  const [text, setText] = useState('');
+const useTypewriter = (words, speed = 80, delay = 2000, enabled = true) => {
+  const [text, setText] = useState(enabled ? '' : words[0]);
   const [wordIndex, setWordIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
 
   useEffect(() => {
+    if (!enabled) return undefined;
+
     const currentWord = words[wordIndex];
     let timeout;
 
@@ -39,7 +41,7 @@ const useTypewriter = (words, speed = 80, delay = 2000) => {
     }
 
     return () => clearTimeout(timeout);
-  }, [text, isDeleting, wordIndex, words, speed, delay]);
+  }, [text, isDeleting, wordIndex, words, speed, delay, enabled]);
 
   return text;
 };
@@ -307,16 +309,36 @@ const DecryptButton = ({ text, onClick, icon: Icon }) => {
 };
 
 const ContactTerminal = () => {
+  const mobile = isMobileViewport();
   const [copied, setCopied] = useState(false);
   const [linesRevealed, setLinesRevealed] = useState(0);
   const command = 'curl -s https://api.talhaghaffar.dev/contact';
 
   useEffect(() => {
+    if (mobile) return undefined;
+
     const timer = setInterval(() => {
       setLinesRevealed((prev) => (prev < 5 ? prev + 1 : prev));
     }, 400);
     return () => clearInterval(timer);
-  }, []);
+  }, [mobile]);
+
+  if (mobile) {
+    return (
+      <div className="w-full max-w-sm rounded-lg border border-slate-800 bg-slate-900/70 p-4">
+        <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-3">Direct Contact</p>
+        <a
+          href="https://www.linkedin.com/in/talha-ghaffar/"
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center justify-between rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-3 text-sm text-emerald-100"
+        >
+          <span>Open LinkedIn profile</span>
+          <ArrowRight size={15} />
+        </a>
+      </div>
+    );
+  }
 
   const handleCopy = () => {
     navigator.clipboard.writeText('https://www.linkedin.com/in/talha-ghaffar/');
@@ -370,11 +392,24 @@ const ContactTerminal = () => {
 };
 
 const SkillsMarquee = () => {
+  const mobile = isMobileViewport();
   const skills = [
     'AWS Architecture', 'Penetration Testing', 'Python Automation',
     'Cybersecurity Analysis', 'Network Admin', 'Ethical Hacking',
     'Cloud Security', 'System Administration', 'Vulnerability Assessment'
   ];
+
+  if (mobile) {
+    return (
+      <div className="grid grid-cols-2 gap-2 mt-8 relative z-10">
+        {skills.slice(0, 4).map((skill) => (
+          <div key={skill} className="rounded-md border border-slate-800 bg-slate-900/30 px-3 py-2 text-[11px] font-mono text-slate-400">
+            {skill}
+          </div>
+        ))}
+      </div>
+    );
+  }
 
   return (
     <div className="w-full overflow-hidden py-3 border-y border-slate-800/50 bg-slate-900/20 backdrop-blur-sm mt-12 relative z-10 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
@@ -397,7 +432,7 @@ const HomeView = ({ onNavigate, isMobile }) => {
     'Network & IT Administrator',
     'Security Analyst'
   ];
-  const currentRole = useTypewriter(roles, 60, 2500);
+  const currentRole = useTypewriter(roles, 60, 2500, !isMobile);
 
   if (isMobile) {
     return (
