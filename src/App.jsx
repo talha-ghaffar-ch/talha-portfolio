@@ -579,14 +579,39 @@ const ProjectsView = () => {
       { color: 'from-orange-500/20 to-rose-500/20', glowColor: '#f97316' }
     ];
 
-    const iconForLanguage = (language) => {
-      const lang = (language || '').toLowerCase();
+    const iconForRepo = (repo) => {
+      const lang = (repo.language || '').toLowerCase();
+      const searchable = `${repo.name || ''} ${repo.description || ''}`.toLowerCase();
+
+      if (searchable.includes('security') || searchable.includes('pentest') || searchable.includes('encryption') || searchable.includes('vulnerability') || searchable.includes('cyber')) {
+        return Shield;
+      }
+      if (searchable.includes('cloud') || searchable.includes('aws') || searchable.includes('gcp') || searchable.includes('docker') || searchable.includes('kubernetes')) {
+        return Cloud;
+      }
+      if (searchable.includes('trading') || searchable.includes('analytics') || searchable.includes('dashboard')) {
+        return Activity;
+      }
+      if (searchable.includes('ai') || searchable.includes('ml') || searchable.includes('model') || searchable.includes('automation') || searchable.includes('bot')) {
+        return Cpu;
+      }
+      if (searchable.includes('network') || searchable.includes('terminal') || searchable.includes('cli') || searchable.includes('script')) {
+        return Terminal;
+      }
+      if (searchable.includes('database') || searchable.includes('sql') || searchable.includes('mongo') || searchable.includes('postgres')) {
+        return Database;
+      }
+      if (searchable.includes('portfolio') || searchable.includes('website') || searchable.includes('react') || searchable.includes('frontend') || searchable.includes('ui')) {
+        return Code;
+      }
+
       if (lang.includes('python')) return Lock;
-      if (lang.includes('javascript') || lang.includes('typescript')) return Activity;
+      if (lang.includes('javascript') || lang.includes('typescript')) return Code;
       if (lang.includes('html') || lang.includes('css')) return Code;
-      if (lang.includes('shell')) return Terminal;
+      if (lang.includes('shell') || lang.includes('bash')) return Terminal;
       if (lang.includes('sql')) return Database;
       if (lang.includes('docker')) return Cloud;
+
       return FolderGit2;
     };
 
@@ -609,7 +634,7 @@ const ProjectsView = () => {
               type: `${repo.language || 'General'} / Open Source`,
               description: repo.description || 'No description provided yet.',
               tech,
-              icon: iconForLanguage(repo.language),
+              icon: iconForRepo(repo),
               link: repo.html_url,
               color: style.color,
               glowColor: style.glowColor
