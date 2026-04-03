@@ -565,28 +565,77 @@ const AboutView = () => {
 };
 
 const ProjectsView = () => {
-  const projects = [
-    {
-      title: 'Python Tkinter Encryption App',
-      type: 'Cybersecurity / Dev',
-      description: 'A desktop-based GUI application for text and file encryption using Fernet symmetric cryptography. Features a secure login system, clean UI, file browsing, and real-time encryption/decryption capabilities.',
-      tech: ['Python', 'Tkinter', 'Cryptography', 'Fernet'],
-      icon: Lock,
-      link: 'https://github.com/talha-ghaffar-ch/Python-Tkinter-Encryption-App',
-      color: 'from-purple-500/20 to-indigo-500/20',
-      border: 'hover:border-purple-500/50'
-    },
-    {
-      title: 'Algorithmic Trading Engine',
-      type: 'FinTech / Automation',
-      description: 'Custom quantitative trading bot utilizing Mean Reversion and Machine Learning models to analyze market inefficiencies. Connects via WebSocket for real-time data processing and automated execution.',
-      tech: ['Python', 'Pandas', 'TensorFlow', 'WebSockets'],
-      icon: Activity,
-      link: '#',
-      color: 'from-cyan-500/20 to-blue-500/20',
-      border: 'hover:border-cyan-500/50'
-    }
-  ];
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadError, setLoadError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const colors = [
+      { color: 'from-purple-500/20 to-indigo-500/20', glowColor: '#a855f7' },
+      { color: 'from-cyan-500/20 to-blue-500/20', glowColor: '#0ea5e9' },
+      { color: 'from-emerald-500/20 to-teal-500/20', glowColor: '#10b981' },
+      { color: 'from-orange-500/20 to-rose-500/20', glowColor: '#f97316' }
+    ];
+
+    const iconForLanguage = (language) => {
+      const lang = (language || '').toLowerCase();
+      if (lang.includes('python')) return Lock;
+      if (lang.includes('javascript') || lang.includes('typescript')) return Activity;
+      if (lang.includes('html') || lang.includes('css')) return Code;
+      if (lang.includes('shell')) return Terminal;
+      if (lang.includes('sql')) return Database;
+      if (lang.includes('docker')) return Cloud;
+      return FolderGit2;
+    };
+
+    const fetchProjects = async () => {
+      try {
+        const response = await fetch('https://api.github.com/users/talha-ghaffar-ch/repos?per_page=100&sort=updated');
+        if (!response.ok) throw new Error('Unable to fetch GitHub repositories.');
+
+        const repos = await response.json();
+        const mapped = repos
+          .filter((repo) => !repo.fork)
+          .map((repo, index) => {
+            const style = colors[index % colors.length];
+            const tech = [repo.language || 'General'];
+            if (repo.stargazers_count > 0) tech.push(`${repo.stargazers_count} Stars`);
+            tech.push('GitHub');
+
+            return {
+              title: repo.name,
+              type: `${repo.language || 'General'} / Open Source`,
+              description: repo.description || 'No description provided yet.',
+              tech,
+              icon: iconForLanguage(repo.language),
+              link: repo.html_url,
+              color: style.color,
+              glowColor: style.glowColor
+            };
+          });
+
+        if (isMounted) {
+          setProjects(mapped);
+          setLoadError('');
+        }
+      } catch (error) {
+        if (isMounted) {
+          setLoadError('Failed to load projects from GitHub. Please try again later.');
+        }
+      } finally {
+        if (isMounted) {
+          setIsLoading(false);
+        }
+      }
+    };
+
+    fetchProjects();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   return (
     <div className="py-12 space-y-8">
@@ -598,11 +647,19 @@ const ProjectsView = () => {
         </div>
       </FadeIn>
 
+      {isLoading && (
+        <p className="text-sm font-mono text-slate-500">Fetching projects from GitHub...</p>
+      )}
+
+      {loadError && (
+        <p className="text-sm font-mono text-rose-400">{loadError}</p>
+      )}
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {projects.map((project, i) => (
           <FadeIn key={i} delay={i * 150}>
             <TiltCard glowColor="rgba(0,0,0,0)" className="h-full">
-              <GlowingBorder rounding="rounded-xl" glowColor={project.title.includes('Trading') ? '#0ea5e9' : '#a855f7'} className="h-full" innerClassName="flex flex-col bg-slate-900/50 backdrop-blur-sm">
+              <GlowingBorder rounding="rounded-xl" glowColor={project.glowColor} className="h-full" innerClassName="flex flex-col bg-slate-900/50 backdrop-blur-sm">
                 <div className={`h-32 bg-gradient-to-br ${project.color} border-b border-slate-800/50 relative overflow-hidden flex items-center justify-center`}>
                   <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMWUyOTNiIi8+CjxwYXRoIGQ9Ik0wIDBMNCA0Wk00IDBMMCA0WiIgc3Ryb2tlPSIjMGYxNzJhIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+')] opacity-20" />
                   <project.icon size={48} className="text-white/50 group-hover:scale-110 group-hover:text-white transition-all duration-500 drop-shadow-lg relative z-10" />
