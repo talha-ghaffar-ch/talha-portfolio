@@ -3,7 +3,7 @@ import {
   Terminal, Shield, Activity, Cloud,
   Lock, Code, Database,
   Copy, CheckCircle, Briefcase, GraduationCap,
-  FolderGit2, TerminalSquare, ExternalLink, Cpu, Star, CalendarDays
+  FolderGit2, TerminalSquare, ExternalLink, Cpu
 } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 
@@ -420,22 +420,6 @@ const HomeView = () => {
             </p>
           </FadeIn>
 
-          <FadeIn delay={470}>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl">
-              {[
-                { label: 'GitHub Repos', value: 'Live Sync' },
-                { label: 'Certifications', value: '03+' },
-                { label: 'Focus', value: 'Security' },
-                { label: 'Status', value: 'Available' }
-              ].map((metric) => (
-                <div key={metric.label} className="rounded-lg border border-slate-800/80 bg-slate-900/50 px-3 py-2 backdrop-blur-sm">
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500">{metric.label}</p>
-                  <p className="text-sm font-semibold text-slate-200">{metric.value}</p>
-                </div>
-              ))}
-            </div>
-          </FadeIn>
-
           <FadeIn delay={500} className="pt-2 flex flex-wrap gap-4 items-center">
             <div className="flex gap-4 ml-2">
               <a href="https://github.com/talha-ghaffar-ch" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-800 hover:border-white hover:text-white text-slate-400 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.2)]">
@@ -650,8 +634,6 @@ const ProjectsView = () => {
               type: `${repo.language || 'General'} / Open Source`,
               description: repo.description || 'No description provided yet.',
               tech,
-              stars: repo.stargazers_count || 0,
-              updatedAt: repo.updated_at,
               icon: iconForRepo(repo),
               link: repo.html_url,
               color: style.color,
@@ -698,7 +680,7 @@ const ProjectsView = () => {
         <p className="text-sm font-mono text-rose-400">{loadError}</p>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {projects.map((project, i) => (
           <FadeIn key={i} delay={i * 150}>
             <TiltCard glowColor="rgba(0,0,0,0)" className="h-full">
@@ -713,9 +695,9 @@ const ProjectsView = () => {
 
                 <div className="p-6 flex flex-col justify-between h-[calc(100%-8rem)]">
                   <div>
-                    <div className="flex justify-between items-start mb-2 gap-3">
+                    <div className="flex justify-between items-start mb-2">
                       <p className="text-xs font-mono text-slate-500">{project.type}</p>
-                      <a href={project.link} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-emerald-400 transition-colors" aria-label={`Open ${project.title}`}>
+                      <a href={project.link} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-emerald-400 transition-colors">
                         <ExternalLink size={16} />
                       </a>
                     </div>
@@ -725,30 +707,14 @@ const ProjectsView = () => {
                     <p className="text-sm text-slate-400 leading-relaxed mb-6">
                       {project.description}
                     </p>
-
-                    <div className="flex items-center gap-4 text-[11px] font-mono text-slate-500 border-t border-slate-800/60 pt-3 mb-3">
-                      <span className="inline-flex items-center gap-1"><Star size={12} className="text-yellow-400" /> {project.stars}</span>
-                      <span className="inline-flex items-center gap-1"><CalendarDays size={12} className="text-cyan-400" /> {new Date(project.updatedAt).toLocaleDateString()}</span>
-                    </div>
                   </div>
 
-                  <div className="mt-auto pt-3">
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tech.map((tech, j) => (
-                        <span key={j} className="px-2 py-1 bg-slate-950 border border-slate-800 rounded text-[10px] font-mono text-slate-300 group-hover:border-emerald-500/30 transition-colors">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-xs font-mono border border-emerald-500/40 text-emerald-300 hover:text-emerald-200 hover:border-emerald-300 hover:bg-emerald-500/10 transition-all"
-                    >
-                      View Project
-                      <ExternalLink size={12} />
-                    </a>
+                  <div className="flex flex-wrap gap-2 mt-auto pt-6">
+                    {project.tech.map((tech, j) => (
+                      <span key={j} className="px-2 py-1 bg-slate-950 border border-slate-800 rounded text-[10px] font-mono text-slate-300 group-hover:border-emerald-500/30 transition-colors">
+                        {tech}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </GlowingBorder>
