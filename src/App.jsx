@@ -461,8 +461,8 @@ const HomeView = () => {
               <div className="absolute top-1/2 -left-6 bg-slate-900 border border-cyan-500 p-2 rounded-lg animate-[float_5s_ease-in-out_infinite_reverse] shadow-[0_0_10px_rgba(34,211,238,0.3)] group-hover:scale-110 transition-transform delay-100">
                 <Cloud size={20} className="text-cyan-400" />
               </div>
-              <div className="absolute -bottom-4 right-8 bg-slate-900 border border-purple-500 p-2 rounded-lg animate-[float_6s_ease-in-out_infinite] shadow-[0_0_10px_rgba(168,85,247,0.3)] group-hover:scale-110 transition-transform delay-200">
-                <Terminal size={20} className="text-purple-400" />
+              <div className="absolute -bottom-4 right-8 bg-slate-900 border border-orange-500 p-2 rounded-lg animate-[float_6s_ease-in-out_infinite] shadow-[0_0_10px_rgba(249,115,22,0.3)] group-hover:scale-110 transition-transform delay-200">
+                <Terminal size={20} className="text-orange-400" />
               </div>
 
               <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 relative z-10 bg-slate-800">
@@ -589,7 +589,7 @@ const ProjectsView = () => {
     let isMounted = true;
 
     const colors = [
-      { color: 'from-purple-500/20 to-indigo-500/20', glowColor: '#a855f7' },
+      { color: 'from-emerald-500/20 to-teal-500/20', glowColor: '#10b981' },
       { color: 'from-cyan-500/20 to-blue-500/20', glowColor: '#0ea5e9' },
       { color: 'from-emerald-500/20 to-teal-500/20', glowColor: '#10b981' },
       { color: 'from-orange-500/20 to-rose-500/20', glowColor: '#f97316' }
@@ -684,7 +684,7 @@ const ProjectsView = () => {
     <div className="py-12 space-y-8">
       <FadeIn>
         <div className="relative flex items-center gap-3 mb-8 pb-4">
-          <FolderGit2 className="text-purple-500" size={28} />
+          <FolderGit2 className="text-cyan-400" size={28} />
           <h2 className="text-2xl font-bold font-mono text-white">PROJECTS <span className="text-slate-600">// Execution</span></h2>
           <GlowingLine />
         </div>
@@ -909,6 +909,7 @@ export default function App() {
     { id: 'projects', label: 'EXEC', icon: FolderGit2 },
     { id: 'vault', label: 'VAULT', icon: Database }
   ];
+  const activeIndex = Math.max(navItems.findIndex((item) => item.id === activeView), 0);
 
   return (
     <div className="min-h-screen bg-[#050505] text-slate-200 selection:bg-emerald-500/30 selection:text-emerald-200 font-sans relative">
@@ -924,16 +925,23 @@ export default function App() {
             TG<span className="text-emerald-500 -ml-1">.</span>
           </div>
 
-          <GlowingBorder rounding="rounded-lg" className="hidden md:block" innerClassName="bg-slate-900/80">
-            <div className="flex gap-1 p-1">
+          <GlowingBorder rounding="rounded-lg" className="hidden md:block min-w-[360px]" innerClassName="bg-slate-900/80">
+            <div className="relative grid grid-cols-4 gap-1 p-1">
+              <div
+                className="absolute left-1 top-1 bottom-1 rounded-md border border-emerald-500/60 bg-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.25)] transition-transform duration-300 ease-out"
+                style={{
+                  width: `calc((100% - 0.5rem) / ${navItems.length})`,
+                  transform: `translateX(calc(${activeIndex} * 100% + ${activeIndex} * 0.25rem))`
+                }}
+              />
               {navItems.map((item) => (
                 <button
                   key={item.id}
                   onClick={() => setActiveView(item.id)}
-                  className={`flex items-center gap-2 px-4 py-1.5 rounded-md font-mono text-xs transition-all duration-300 ${
+                  className={`relative z-10 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md font-mono text-xs transition-all duration-300 ${
                     activeView === item.id
-                      ? 'bg-emerald-500/10 text-emerald-400 shadow-[0_0_10px_rgba(16,185,129,0.2)] border border-emerald-500/50'
-                      : 'text-slate-400 hover:text-emerald-300 hover:bg-slate-800/50 border border-transparent'
+                      ? 'text-emerald-300'
+                      : 'text-slate-400 hover:text-emerald-200'
                   }`}
                 >
                   <item.icon size={14} className={activeView === item.id ? 'text-emerald-500' : 'text-slate-500'} />
@@ -966,10 +974,13 @@ export default function App() {
             <button
               key={item.id}
               onClick={() => setActiveView(item.id)}
-              className={`flex flex-col items-center justify-center w-full h-full space-y-1 transition-colors ${
-                activeView === item.id ? 'text-emerald-400' : 'text-slate-500 hover:text-slate-300'
+              className={`relative flex flex-col items-center justify-center w-full h-full space-y-1 rounded-md transition-all duration-300 ${
+                activeView === item.id
+                  ? 'text-emerald-300 bg-emerald-500/10 border border-emerald-500/40 shadow-[0_0_12px_rgba(16,185,129,0.2)]'
+                  : 'text-slate-500 border border-transparent hover:text-slate-300 hover:bg-slate-900/60'
               }`}
             >
+              {activeView === item.id && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-emerald-400 rounded-full" />}
               <item.icon size={20} />
               <span className="text-[10px] font-mono">{item.label}</span>
             </button>
