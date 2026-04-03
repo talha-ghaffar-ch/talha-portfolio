@@ -247,7 +247,7 @@ const InteractiveBackground = () => {
     };
   }, []);
 
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-30" />;
+  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-15" />;
 };
 
 const DecryptButton = ({ text, onClick, icon: Icon }) => {
@@ -388,35 +388,30 @@ const HomeView = ({ onNavigate }) => {
           <FadeIn delay={100}>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 border border-emerald-500/40 backdrop-blur-md shadow-[0_0_15px_rgba(16,185,129,0.15)]">
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-[ping_2s_infinite]" />
-              <span className="text-xs font-mono text-emerald-100">SYSTEM.ACTIVE // OPEN FOR COLLABORATION</span>
+              <span className="text-xs font-mono text-emerald-100">Available for Freelance and Full-Time Roles</span>
             </div>
           </FadeIn>
 
           <FadeIn delay={200}>
             <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight relative">
               <span className="block text-slate-100">TALHA</span>
-              <span className="relative inline-block glitch-wrapper group">
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)] transition-all duration-300 group-hover:opacity-0">
-                  GHAFFAR.
-                </span>
-                <span className="absolute top-0 left-0 text-emerald-400 opacity-0 group-hover:opacity-100 animate-[glitch_0.3s_linear_infinite] before:content-['GHAFFAR.'] before:absolute before:left-[2px] before:text-cyan-500 before:bg-[#050505] before:overflow-hidden after:content-['GHAFFAR.'] after:absolute after:left-[-2px] after:text-rose-500 after:bg-[#050505] after:overflow-hidden">
-                  GHAFFAR.
-                </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-emerald-400 to-cyan-500 drop-shadow-[0_0_15px_rgba(16,185,129,0.4)]">
+                GHAFFAR.
               </span>
             </h1>
           </FadeIn>
 
           <FadeIn delay={300} className="h-8 md:h-12">
             <p className="text-lg md:text-xl font-mono text-slate-400 flex items-center gap-2">
-              <span className="text-emerald-500">root@sys:~#</span>
+              <span className="text-emerald-500">Specializing in:</span>
               <span className="text-slate-200">{currentRole}</span>
               <span className="w-2 h-5 bg-emerald-500 animate-[pulse_1s_infinite]" />
             </p>
           </FadeIn>
 
           <FadeIn delay={400}>
-            <p className="text-slate-400 max-w-lg leading-relaxed text-lg border-l-2 border-slate-800 pl-4">
-              Building Secure, Scalable, and High-Performing IT Solutions. Specialized in finding vulnerabilities before they become problems and designing robust cloud architectures.
+            <p className="text-slate-300 max-w-xl leading-relaxed text-lg border-l-2 border-slate-800 pl-4">
+              I help businesses secure their systems, improve cloud infrastructure, and solve technical problems with clear and practical solutions.
             </p>
           </FadeIn>
 
@@ -519,7 +514,7 @@ const AboutView = () => {
       <FadeIn>
         <div className="relative flex items-center gap-3 mb-8 pb-4">
           <TerminalSquare className="text-emerald-500" size={28} />
-          <h2 className="text-2xl font-bold font-mono text-white">WHOAMI <span className="text-slate-600">// About & Timeline</span></h2>
+          <h2 className="text-2xl font-bold font-mono text-white">About Me <span className="text-slate-600">// Experience & Education</span></h2>
           <GlowingLine />
         </div>
       </FadeIn>
@@ -713,7 +708,7 @@ const ProjectsView = () => {
       <FadeIn>
         <div className="relative flex items-center gap-3 mb-8 pb-4">
           <FolderGit2 className="text-cyan-400" size={28} />
-          <h2 className="text-2xl font-bold font-mono text-white">PROJECTS <span className="text-slate-600">// Execution</span></h2>
+          <h2 className="text-2xl font-bold font-mono text-white">Projects <span className="text-slate-600">// Live from GitHub</span></h2>
           <GlowingLine />
         </div>
       </FadeIn>
@@ -824,6 +819,7 @@ const VaultView = () => {
       issuer: 'Nationwide IT Skillsets Expansion Program - NITSEP',
       date: 'Issued Mar 2026',
       id: 'Credential ID EAE9749217',
+      verifyLink: 'https://nitsep.pk/course-certificate/EAE9749217',
       icon: Shield,
       color: 'text-rose-500',
       bg: 'from-rose-500/10 to-transparent',
@@ -834,6 +830,7 @@ const VaultView = () => {
       issuer: 'Amazon Web Services (AWS)',
       date: 'Issued Nov 2025',
       id: 'Credential ID 5bd0755e...',
+      verifyLink: 'https://www.linkedin.com/in/talha-ghaffar',
       icon: Cloud,
       color: 'text-orange-500',
       bg: 'from-orange-500/10 to-transparent',
@@ -844,6 +841,7 @@ const VaultView = () => {
       issuer: 'University of Management and Technology - UMT',
       date: 'Issued Feb 2026',
       id: 'Credential ID F2023266045',
+      verifyLink: '',
       icon: Code,
       color: 'text-cyan-500',
       bg: 'from-cyan-500/10 to-transparent',
@@ -861,14 +859,15 @@ const VaultView = () => {
       <FadeIn>
         <div className="relative flex items-center gap-3 mb-8 pb-4">
           <Database className="text-orange-500" size={28} />
-          <h2 className="text-2xl font-bold font-mono text-white">THE_VAULT <span className="text-slate-600">// Credentials & Skills</span></h2>
+          <h2 className="text-2xl font-bold font-mono text-white">Certifications <span className="text-slate-600">// Verified Credentials</span></h2>
           <GlowingLine />
         </div>
       </FadeIn>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         <div className="lg:col-span-8 space-y-4">
-          <h3 className="text-sm font-mono text-slate-500 mb-4">LICENSES & CERTIFICATIONS</h3>
+          <h3 className="text-sm font-mono text-slate-500 mb-1">LICENSES & CERTIFICATIONS</h3>
+          <p className="text-xs text-slate-500 mb-4">Use "Verify" to open proof links for available certifications.</p>
           {certs.map((cert, i) => (
             <FadeIn key={i} delay={i * 100}>
               <GlowingBorder rounding="rounded-lg" glowColor={cert.title.includes('AWS') ? '#f97316' : cert.title.includes('English') ? '#0ea5e9' : '#f43f5e'}>
@@ -890,6 +889,23 @@ const VaultView = () => {
                     <div className="mt-3 pt-3 border-t border-slate-800/50 text-xs text-slate-400 flex items-center gap-2 group-hover:text-emerald-400/80 transition-colors">
                       <CheckCircle size={12} className="text-emerald-500" />
                       <span className="truncate">Skills: {cert.skills}</span>
+                    </div>
+                    <div className="mt-3">
+                      {cert.verifyLink ? (
+                        <a
+                          href={cert.verifyLink}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-emerald-500/40 text-emerald-300 hover:text-emerald-200 hover:border-emerald-300 hover:bg-emerald-500/10 transition-all text-xs font-mono"
+                        >
+                          Verify Certificate
+                          <ExternalLink size={12} />
+                        </a>
+                      ) : (
+                        <span className="inline-flex items-center px-3 py-1.5 rounded-md border border-slate-700 text-slate-500 text-xs font-mono">
+                          Verification Link Not Added
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -961,10 +977,10 @@ export default function App() {
   const [activeView, setActiveView] = useState('home');
 
   const navItems = [
-    { id: 'home', label: 'INIT', icon: Terminal },
-    { id: 'about', label: 'WHOAMI', icon: TerminalSquare },
-    { id: 'projects', label: 'EXEC', icon: FolderGit2 },
-    { id: 'vault', label: 'VAULT', icon: Database }
+    { id: 'home', label: 'HOME', icon: Terminal },
+    { id: 'about', label: 'ABOUT', icon: TerminalSquare },
+    { id: 'projects', label: 'PROJECTS', icon: FolderGit2 },
+    { id: 'vault', label: 'CERTS', icon: Database }
   ];
   const activeIndex = Math.max(navItems.findIndex((item) => item.id === activeView), 0);
 
