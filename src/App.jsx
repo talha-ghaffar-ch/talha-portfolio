@@ -8,6 +8,7 @@ import {
   Database,
   ExternalLink,
   FolderGit2,
+  Lock,
   Shield,
   Sparkles,
   Terminal,
@@ -370,7 +371,7 @@ const HomeView = ({ onNavigate, isMobile }) => {
               </div>
 
               <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 relative z-10 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-center">
-                <img src="/profile.jpg" alt="Talha Ghaffar" className="w-full h-full object-cover" />
+                <img src="/profile.png" alt="Talha Ghaffar" className="w-full h-full object-cover" />
               </div>
             </div>
           </FadeIn>
@@ -618,19 +619,17 @@ const CertificationsView = () => (
         <FadeIn delay={200}>
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
             <div className="grid gap-3">
-              <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-sky-500/40 transition-colors">
+              <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" aria-label="Connect on LinkedIn" className="inline-flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-sky-500/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sky-300/70">
                 <span>LinkedIn</span>
                 <ArrowRight size={14} className="text-sky-400" />
               </a>
-              <a href={cvData.links.github} target="_blank" rel="noreferrer" className="inline-flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-white/40 transition-colors">
+              <a href={cvData.links.github} target="_blank" rel="noreferrer" aria-label="Connect on GitHub" className="inline-flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-white/40 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200/70">
                 <span>GitHub</span>
                 <ArrowRight size={14} className="text-slate-300" />
               </a>
             </div>
           </div>
         </FadeIn>
-
-
       </div>
     </div>
   </div>
