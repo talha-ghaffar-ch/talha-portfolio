@@ -24,6 +24,8 @@ body {
     radial-gradient(circle at 80% 88%, rgba(16, 185, 129, 0.16), transparent 42%),
     #040507;
   color: #e5e7eb;
+  line-height: 1.6;
+  text-rendering: optimizeLegibility;
 }
 
 body::before {
@@ -43,4 +45,25 @@ h3,
 h4 {
   font-family: var(--font-display);
   letter-spacing: -0.02em;
+}
+
+a {
+  text-decoration-thickness: 0.08em;
+  text-underline-offset: 0.18em;
+}
+
+:focus-visible {
+  outline: 2px solid rgba(52, 211, 153, 0.9);
+  outline-offset: 2px;
+}
+
+::selection {
+  background: rgba(16, 185, 129, 0.28);
+  color: #ecfeff;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }

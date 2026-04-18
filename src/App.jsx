@@ -1,18 +1,25 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
-  Terminal, Shield, Activity, Cloud,
-  Lock, Code, Database,
-  Copy, CheckCircle, Briefcase, GraduationCap,
-  FolderGit2, TerminalSquare, ExternalLink, Cpu, Star, CalendarDays, ArrowRight, Sparkles
+  Activity,
+  ArrowRight,
+  CheckCircle,
+  Cloud,
+  Code,
+  Database,
+  ExternalLink,
+  FolderGit2,
+  Lock,
+  Mail,
+  Shield,
+  Sparkles,
+  Terminal,
+  TerminalSquare,
+  BadgeCheck,
+  Monitor,
 } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 
-const isMobileViewport = () => {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia('(max-width: 767px)').matches;
-};
-
-const useTypewriter = (words, speed = 80, delay = 2000, enabled = true) => {
+const useTypewriter = (words, speed = 80, delay = 1800, enabled = true) => {
   const [text, setText] = useState(enabled ? '' : words[0]);
   const [wordIndex, setWordIndex] = useState(0);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -21,18 +28,18 @@ const useTypewriter = (words, speed = 80, delay = 2000, enabled = true) => {
     if (!enabled) return undefined;
 
     const currentWord = words[wordIndex];
-    let timeout;
+    let timeoutId;
 
     if (isDeleting) {
-      timeout = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setText(currentWord.substring(0, text.length - 1));
         if (text.length === 0) {
           setIsDeleting(false);
-          setWordIndex((prev) => (prev + 1) % words.length);
+          setWordIndex((previous) => (previous + 1) % words.length);
         }
       }, speed / 2);
     } else {
-      timeout = setTimeout(() => {
+      timeoutId = setTimeout(() => {
         setText(currentWord.substring(0, text.length + 1));
         if (text.length === currentWord.length) {
           setTimeout(() => setIsDeleting(true), delay);
@@ -40,13 +47,13 @@ const useTypewriter = (words, speed = 80, delay = 2000, enabled = true) => {
       }, speed);
     }
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(timeoutId);
   }, [text, isDeleting, wordIndex, words, speed, delay, enabled]);
 
   return text;
 };
 
-const FadeIn = ({ children, delay = 0, direction = 'up', className = '' }) => {
+const FadeIn = ({ children, delay = 0, className = '', direction = 'up' }) => {
   const [isVisible, setIsVisible] = useState(false);
   const ref = useRef(null);
 
@@ -60,30 +67,36 @@ const FadeIn = ({ children, delay = 0, direction = 'up', className = '' }) => {
       },
       { threshold: 0.1 }
     );
+
     if (ref.current) observer.observe(ref.current);
     return () => observer.disconnect();
   }, []);
 
   const getTransform = () => {
     if (isVisible) return 'translate(0, 0) scale(1)';
+
     switch (direction) {
-      case 'up': return 'translateY(40px)';
-      case 'down': return 'translateY(-40px)';
-      case 'left': return 'translateX(40px)';
-      case 'right': return 'translateX(-40px)';
-      case 'scale': return 'scale(0.95)';
-      default: return 'translate(0, 0)';
+      case 'down':
+        return 'translateY(-24px)';
+      case 'left':
+        return 'translateX(24px)';
+      case 'right':
+        return 'translateX(-24px)';
+      case 'scale':
+        return 'scale(0.97)';
+      default:
+        return 'translateY(24px)';
     }
   };
 
   return (
     <div
       ref={ref}
-      className={`transition-all duration-1000 ease-out ${className}`}
+      className={className}
       style={{
         opacity: isVisible ? 1 : 0,
         transform: getTransform(),
-        transitionDelay: `${delay}ms`,
+        transition: `opacity 700ms ease ${delay}ms, transform 700ms ease ${delay}ms`,
       }}
     >
       {children}
@@ -91,333 +104,202 @@ const FadeIn = ({ children, delay = 0, direction = 'up', className = '' }) => {
   );
 };
 
-const TiltCard = ({ children, className = '', glowColor = 'rgba(16, 185, 129, 0.15)' }) => {
-  const mobile = isMobileViewport();
-  const [style, setStyle] = useState({});
-  const cardRef = useRef(null);
-
-  if (mobile) {
-    return <div className={className}>{children}</div>;
-  }
-
-  const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
-    const { left, top, width, height } = cardRef.current.getBoundingClientRect();
-    const x = (e.clientX - left) / width;
-    const y = (e.clientY - top) / height;
-    const rotateX = (y - 0.5) * -15;
-    const rotateY = (x - 0.5) * 15;
-
-    setStyle({
-      transform: `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`,
-      boxShadow: `0 20px 40px ${glowColor}`,
-    });
-  };
-
-  const handleMouseLeave = () => {
-    setStyle({
-      transform: 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)',
-      boxShadow: '0 0px 0px rgba(0,0,0,0)',
-    });
-  };
-
-  return (
-    <div
-      ref={cardRef}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      className={`transition-all duration-300 ease-out transform-gpu ${className}`}
-      style={style}
-    >
-      {children}
+const SectionHeader = ({ icon: Icon, title, subtitle }) => (
+  <div className="relative flex items-center gap-3 pb-4 mb-6">
+    <Icon className="text-emerald-400" size={26} />
+    <h2 className="text-xl sm:text-2xl font-bold text-white font-mono">
+      {title} <span className="text-slate-600">// {subtitle}</span>
+    </h2>
+    <div className="absolute bottom-0 left-0 h-px w-full bg-slate-800/80 overflow-hidden">
+      <div className="h-full w-1/4 bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-[scanLine_2.5s_ease-in-out_infinite]" />
     </div>
-  );
-};
-
-const GlowingBorder = ({ children, className = '', innerClassName = '', rounding = 'rounded-xl', glowColor = '#10b981' }) => {
-  const mobile = isMobileViewport();
-
-  return (
-    <div className={`relative p-[1px] overflow-hidden group ${rounding} ${className}`}>
-      <div className={`absolute inset-0 bg-slate-800/50 ${rounding}`} />
-      {!mobile && (
-        <div
-          className="absolute inset-[-300%] animate-[spin_4s_linear_infinite] opacity-50 group-hover:opacity-100 transition-opacity duration-500"
-          style={{
-            background: `conic-gradient(from 90deg at 50% 50%, transparent 0%, transparent 25%, ${glowColor} 50%, transparent 75%, transparent 100%)`
-          }}
-        />
-      )}
-      <div className={`relative h-full w-full bg-[#050505] ${rounding} ${innerClassName}`}>
-        {children}
-      </div>
-    </div>
-  );
-};
-
-const GlowingLine = () => (
-  <div className="absolute bottom-0 left-0 w-full h-[1px] bg-slate-800/50 overflow-hidden">
-    <div className="absolute top-0 left-0 w-[20%] h-full bg-gradient-to-r from-transparent via-emerald-400 to-transparent animate-[scanLine_2.5s_ease-in-out_infinite]" />
   </div>
 );
 
-const InteractiveBackground = () => {
-  const canvasRef = useRef(null);
-
-  useEffect(() => {
-    if (isMobileViewport()) return undefined;
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    let animationFrameId;
-    let particles = [];
-    let mouse = { x: null, y: null };
-
-    const resize = () => {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
-      initParticles();
-    };
-
-    const initParticles = () => {
-      particles = [];
-      const numParticles = Math.min(window.innerWidth / 15, 80);
-      for (let i = 0; i < numParticles; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.5,
-          vy: (Math.random() - 0.5) * 0.5,
-          radius: Math.random() * 1.5 + 0.5,
-        });
-      }
-    };
-
-    const draw = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      ctx.fillStyle = '#10b981';
-
-      particles.forEach((p, index) => {
-        p.x += p.vx;
-        p.y += p.vy;
-
-        if (p.x < 0 || p.x > canvas.width) p.vx *= -1;
-        if (p.y < 0 || p.y > canvas.height) p.vy *= -1;
-
-        if (mouse.x && mouse.y) {
-          const dx = mouse.x - p.x;
-          const dy = mouse.y - p.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-          if (dist < 200) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(mouse.x, mouse.y);
-            ctx.strokeStyle = `rgba(14, 165, 233, ${0.4 * (1 - dist / 200)})`;
-            ctx.stroke();
-          }
-        }
-
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        for (let j = index + 1; j < particles.length; j++) {
-          const p2 = particles[j];
-          const dx = p.x - p2.x;
-          const dy = p.y - p2.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
-
-          if (dist < 120) {
-            ctx.beginPath();
-            ctx.moveTo(p.x, p.y);
-            ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(16, 185, 129, ${0.1 * (1 - dist / 120)})`;
-            ctx.stroke();
-          }
-        }
-      });
-
-      animationFrameId = requestAnimationFrame(draw);
-    };
-
-    const onMouseMove = (e) => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
-    };
-
-    const onMouseOut = () => {
-      mouse.x = null;
-      mouse.y = null;
-    };
-
-    window.addEventListener('resize', resize);
-    window.addEventListener('mousemove', onMouseMove);
-    window.addEventListener('mouseout', onMouseOut);
-
-    resize();
-    draw();
-
-    return () => {
-      window.removeEventListener('resize', resize);
-      window.removeEventListener('mousemove', onMouseMove);
-      window.removeEventListener('mouseout', onMouseOut);
-      cancelAnimationFrame(animationFrameId);
-    };
-  }, []);
-
-  if (isMobileViewport()) return null;
-
-  return <canvas ref={canvasRef} className="fixed inset-0 z-0 pointer-events-none opacity-20" />;
+const cvData = {
+  profile: {
+    name: 'Talha Ghaffar',
+    summary:
+      'Final year Computer Science student at UMT focused on Cloud Computing, Infrastructure, Cybersecurity, and practical Web and Mobile App Development.',
+    headline: 'Cloud Computing | Cybersecurity | Infrastructure | Web & Mobile App Development',
+  },
+  focusAreas: ['Cloud Computing', 'Infrastructure', 'Cybersecurity', 'Web & Mobile App Development'],
+  skills: [
+    {
+      title: 'Cloud Computing',
+      icon: Cloud,
+      description: 'Cloud concepts, cloud security, AWS fundamentals, and virtualization with VMware and Hyper-V.',
+    },
+    {
+      title: 'Cybersecurity',
+      icon: Shield,
+      description: 'Network security, ethical hacking, penetration testing, and operating systems.',
+    },
+    {
+      title: 'Development',
+      icon: Activity,
+      description: 'Mobile app development, advanced web development, project management, and Crypto & Web3.',
+    },
+  ],
+  experience: [
+    {
+      title: 'Information Technology Specialist',
+      organization: 'Pagri Studio',
+      location: 'Liaquatpur, Pakistan',
+      period: 'Oct 2023 - Present',
+      details:
+        'Managed IT operations, handled hardware, software, and network support, troubleshot technical issues, and supported smooth day-to-day workflows with hands-on system administration.',
+    },
+    {
+      title: 'Creative Media Manager - Design, Editing & Client Acquisition',
+      organization: 'Pagri Studio',
+      location: 'Liaquatpur, Pakistan',
+      period: 'Oct 2023 - Present',
+      details: 'Graphic design, video editing, animation creation, client acquisition, and project management.',
+    },
+  ],
+  education: [
+    {
+      title: 'BS Computer Science',
+      organization: 'University of Management and Technology, Lahore',
+      period: 'Oct 2023 - Current',
+      details: 'Field of study: Information and Communication Technologies. Level: EQF level 6.',
+    },
+    {
+      title: 'Higher Secondary School Certificate (HSSC) - FSc Pre-Engineering',
+      organization: 'SWOT Boys Higher Secondary School, Liaquat Pur',
+      period: '2021 - 2023',
+      details: 'Field of study: Natural sciences, mathematics and statistics. Level: EQF level 4.',
+    },
+    {
+      title: 'Secondary School Certificate (SSC) - Matriculation (Science)',
+      organization: 'SWOT Boys Higher Secondary School, Liaquat Pur',
+      period: '2019 - 2021',
+      details: 'Field of study: Natural sciences, mathematics and statistics. Level: EQF level 2.',
+    },
+  ],
+  languages: [
+    { name: 'Urdu', level: 'Mother tongue' },
+    { name: 'English', level: 'C1' },
+  ],
+  certifications: [
+    {
+      title: 'AWS Cloud Foundations',
+      issuer: 'Amazon Web Services (AWS)',
+      description:
+        'Core cloud concepts, AWS services, pricing and billing, global infrastructure, security, networking, compute, storage, databases, architecture best practices, and monitoring.',
+      link: 'https://www.credly.com/go/VqsTYK4x',
+      icon: Cloud,
+      color: 'text-orange-400',
+    },
+    {
+      title: 'AWS Foundations Workshop',
+      issuer: 'ICFCS - UMT',
+      description: 'Core AWS services, cloud computing concepts, IAM fundamentals, and cloud architecture basics.',
+      link: '',
+      icon: Database,
+      color: 'text-cyan-400',
+    },
+    {
+      title: 'Docker Foundations Professional',
+      issuer: 'Docker, Inc.',
+      description:
+        'Docker architecture, image creation with Dockerfiles, container lifecycle, Compose, volumes, networking, and image management.',
+      link: 'https://www.linkedin.com/learning/certificates/8232a906dfa6432d85978be4e66d2e6c8b461c73f7cf42f80a847abc5ecb2e1e',
+      icon: Terminal,
+      color: 'text-sky-400',
+    },
+    {
+      title: 'PenTest Cyber Specialist Program',
+      issuer: 'Nationwide IT Skillsets Expansion Program - NITSEP',
+      description:
+        'Network security fundamentals, monitoring, ethical hacking, web and WiFi penetration testing, bug bounty, and reconnaissance.',
+      link: 'https://nitsep.pk/course-certificate/EAE9749217',
+      icon: Shield,
+      color: 'text-rose-400',
+    },
+    {
+      title: 'Ethical Hacking & Resilient Defence Workshop',
+      issuer: 'ICFCS - UMT',
+      description: 'Cyber threats, penetration testing basics, network security practices, and resilient defence strategies.',
+      link: '',
+      icon: Lock,
+      color: 'text-emerald-400',
+    },
+    {
+      title: 'English Immersion (SD-100)',
+      issuer: 'University of Management and Technology - UMT',
+      description:
+        'Verbal and written fluency, public speaking, presentation skills, technical writing, active listening, and professional networking.',
+      link: '',
+      icon: Code,
+      color: 'text-cyan-300',
+    },
+  ],
+  projects: [
+    {
+      title: 'Python Tkinter Encryption App',
+      description:
+        'Desktop Python Tkinter encryption and decryption app using Fernet symmetric encryption with login, text encryption, file encryption, and secure decryption.',
+      link: 'https://github.com/talha-ghaffar-ch/Python-Tkinter-Encryption-App',
+      icon: Shield,
+      accent: 'from-emerald-500/20 to-teal-500/20',
+    },
+    {
+      title: 'Pagri Studio App',
+      description:
+        'Mobile-first React and Vite digital agency app packaged for Android with Capacitor, including an AI business assistant, service modules, client workflows, legal pages, and PWA support.',
+      link: 'https://github.com/talha-ghaffar-ch/Pagri-Studio-App-PUBLIC',
+      icon: Activity,
+      accent: 'from-cyan-500/20 to-blue-500/20',
+    },
+  ],
+  proofPoints: [
+    {
+      title: 'Verified credentials',
+      description: 'Public proof is available for selected certifications through issuer or credential links.',
+      icon: BadgeCheck,
+    },
+    {
+      title: 'Open-source work',
+      description: 'Featured projects link directly to GitHub so reviewers can inspect the code and structure.',
+      icon: FolderGit2,
+    },
+    {
+      title: 'Public outreach',
+      description: 'Professional contact is kept public-safe through LinkedIn and GitHub, with no private contact details shown.',
+      icon: Monitor,
+    },
+  ],
+  links: {
+    github: 'https://github.com/talha-ghaffar-ch',
+    linkedin: 'https://www.linkedin.com/in/talha-ghaffar/',
+  },
 };
 
-const DecryptButton = ({ text, onClick, icon: Icon }) => {
-  const [display, setDisplay] = useState(text);
-  const [isHovering, setIsHovering] = useState(false);
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
-
-  useEffect(() => {
-    if (!isHovering) {
-      setDisplay(text);
-      return;
-    }
-    let iteration = 0;
-    const interval = setInterval(() => {
-      setDisplay(
-        text.split('').map((letter, index) => {
-          if (index < iteration) return text[index];
-          return chars[Math.floor(Math.random() * chars.length)];
-        }).join('')
-      );
-      if (iteration >= text.length) clearInterval(interval);
-      iteration += 1 / 3;
-    }, 30);
-    return () => clearInterval(interval);
-  }, [isHovering, text]);
-
-  return (
-    <button
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
-      onClick={onClick}
-      className="relative px-6 py-3 font-mono text-sm font-bold tracking-widest text-emerald-400 uppercase bg-emerald-500/10 border border-emerald-500/50 rounded hover:bg-emerald-500/20 hover:border-emerald-400 transition-all overflow-hidden group flex items-center gap-2 shadow-[0_0_15px_rgba(16,185,129,0.1)] hover:shadow-[0_0_25px_rgba(16,185,129,0.2)]"
-    >
-      <div className="absolute inset-0 w-full h-full bg-gradient-to-r from-emerald-500/0 via-emerald-500/20 to-emerald-500/0 -translate-x-full group-hover:animate-[shimmer_1.5s_infinite]" />
-      {Icon && <Icon size={18} />}
-      {display}
-    </button>
-  );
-};
-
-const ContactTerminal = () => {
-  const mobile = isMobileViewport();
-  const [copied, setCopied] = useState(false);
-  const [linesRevealed, setLinesRevealed] = useState(0);
-  const command = 'curl -s https://api.talhaghaffar.dev/contact';
-
-  useEffect(() => {
-    if (mobile) return undefined;
-
-    const timer = setInterval(() => {
-      setLinesRevealed((prev) => (prev < 5 ? prev + 1 : prev));
-    }, 400);
-    return () => clearInterval(timer);
-  }, [mobile]);
-
-  if (mobile) {
-    return (
-      <div className="w-full max-w-sm rounded-lg border border-slate-800 bg-slate-900/70 p-4">
-        <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-3">Direct Contact</p>
-        <a
-          href="https://www.linkedin.com/in/talha-ghaffar/"
-          target="_blank"
-          rel="noreferrer"
-          className="flex items-center justify-between rounded-md border border-emerald-500/30 bg-emerald-500/10 px-3 py-3 text-sm text-emerald-100"
-        >
-          <span>Open LinkedIn profile</span>
-          <ArrowRight size={15} />
-        </a>
-      </div>
-    );
-  }
-
-  const handleCopy = () => {
-    navigator.clipboard.writeText('https://www.linkedin.com/in/talha-ghaffar/');
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
-  };
-
-  return (
-    <GlowingBorder rounding="rounded-lg" className="w-full max-w-sm shadow-2xl transition-transform hover:scale-[1.02] duration-500" innerClassName="bg-[#0a0a0a] flex flex-col justify-between">
-      <div className="bg-slate-900 px-4 py-2 border-b border-slate-800 flex items-center gap-2 rounded-t-lg">
-        <div className="w-3 h-3 rounded-full bg-rose-500" />
-        <div className="w-3 h-3 rounded-full bg-yellow-500" />
-        <div className="w-3 h-3 rounded-full bg-emerald-500" />
-        <span className="ml-2 text-xs font-mono text-slate-500 flex items-center gap-2">
-          talha@cyber-ops:~
-          <Lock size={10} className="text-emerald-500" />
-        </span>
-      </div>
-      <div className="p-4 font-mono text-sm h-[180px] flex flex-col justify-between">
-        <div>
-          <div className="flex items-center gap-2 text-slate-300 mb-2">
-            <span className="text-emerald-500">➜</span>
-            <span className="text-cyan-400">~</span>
-            <span className="typing-animation whitespace-nowrap overflow-hidden border-r-2 border-emerald-500 pr-1">{command}</span>
-          </div>
-
-          <div className="text-slate-400 space-y-1 ml-4 border-l border-slate-800/50 pl-4 py-2">
-            {linesRevealed > 0 && <p className="animate-[fadeIn_0.3s_ease-in]">{'{'}</p>}
-            {linesRevealed > 1 && <p className="pl-4 animate-[fadeIn_0.3s_ease-in]">"status": <span className="text-emerald-400">"Online"</span>,</p>}
-            {linesRevealed > 2 && <p className="pl-4 animate-[fadeIn_0.3s_ease-in]">"network": <span className="text-cyan-400">"LinkedIn"</span>,</p>}
-            {linesRevealed > 3 && <p className="pl-4 animate-[fadeIn_0.3s_ease-in]">"action": <span className="text-yellow-400">"Awaiting Connection"</span></p>}
-            {linesRevealed > 4 && <p className="animate-[fadeIn_0.3s_ease-in]">{'}'}</p>}
-          </div>
-        </div>
-
-        <div className="mt-4 flex items-center justify-between border-t border-slate-800/50 pt-3">
-          <span className="text-slate-500 animate-pulse">_</span>
-          <button
-            onClick={handleCopy}
-            className={`flex items-center gap-2 text-xs px-3 py-1.5 rounded transition-all duration-300 ${
-              copied ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
-            }`}
-          >
-            {copied ? <CheckCircle size={14} /> : <Copy size={14} />}
-            {copied ? 'LINK COPIED' : 'COPY URL'}
-          </button>
-        </div>
-      </div>
-    </GlowingBorder>
-  );
-};
-
-const SkillsMarquee = () => {
-  const mobile = isMobileViewport();
+const SkillStrip = () => {
   const skills = [
-    'AWS Architecture', 'Penetration Testing', 'Python Automation',
-    'Cybersecurity Analysis', 'Network Admin', 'Ethical Hacking',
-    'Cloud Security', 'System Administration', 'Vulnerability Assessment'
+    'Cloud Computing',
+    'Cloud Security',
+    'AWS Cloud Foundations',
+    'VMware',
+    'Hyper-V',
+    'Network Security',
+    'Ethical Hacking',
+    'Penetration Testing',
+    'Mobile App Development',
+    'Advanced Web Development',
+    'Project Management',
+    'Crypto & Web3',
   ];
 
-  if (mobile) {
-    return (
-      <div className="grid grid-cols-2 gap-2 mt-8 relative z-10">
-        {skills.slice(0, 4).map((skill) => (
-          <div key={skill} className="rounded-md border border-slate-800 bg-slate-900/30 px-3 py-2 text-[11px] font-mono text-slate-400">
-            {skill}
-          </div>
-        ))}
-      </div>
-    );
-  }
-
   return (
-    <div className="w-full overflow-hidden py-3 border-y border-slate-800/50 bg-slate-900/20 backdrop-blur-sm mt-12 relative z-10 shadow-[0_0_30px_rgba(16,185,129,0.05)]">
-      <div className="flex gap-8 whitespace-nowrap animate-[marquee_30s_linear_infinite]">
-        {[...skills, ...skills, ...skills].map((skill, i) => (
-          <span key={i} className="text-xs font-mono text-slate-400 flex items-center gap-3">
-            <Shield size={12} className="text-emerald-500/50" />
-            <span className="hover:text-emerald-400 transition-colors cursor-default">{skill}</span>
+    <div className="w-full overflow-hidden rounded-2xl border border-slate-800/80 bg-slate-900/35 py-3 backdrop-blur-sm">
+      <div className="flex gap-4 whitespace-nowrap animate-[marquee_28s_linear_infinite] px-4">
+        {[...skills, ...skills].map((skill, index) => (
+          <span key={`${skill}-${index}`} className="inline-flex items-center gap-2 rounded-full border border-slate-800 bg-slate-950/60 px-3 py-1.5 text-[11px] font-mono text-slate-300">
+            <Sparkles size={11} className="text-emerald-400/70" />
+            {skill}
           </span>
         ))}
       </div>
@@ -426,187 +308,73 @@ const SkillsMarquee = () => {
 };
 
 const HomeView = ({ onNavigate, isMobile }) => {
-  const roles = [
-    'Cloud Solutions Architect',
-    'Certified Ethical Hacker',
-    'Network & IT Administrator',
-    'Security Analyst'
-  ];
-  const currentRole = useTypewriter(roles, 60, 2500, !isMobile);
-
-  if (isMobile) {
-    return (
-      <div className="space-y-6 pt-6">
-        <FadeIn delay={100}>
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 border border-emerald-400/60 backdrop-blur-md shadow-[0_0_18px_rgba(16,185,129,0.28)]">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-[pulseGlow_1.6s_ease-in-out_infinite]" />
-            <span className="text-xs font-mono text-emerald-100">Available for Freelance and Full-Time Roles</span>
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={200}>
-          <h1 className="text-4xl font-extrabold tracking-tight text-white leading-tight">
-            <span className="block text-slate-100">TALHA</span>
-            <span className="block text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300 drop-shadow-[0_0_20px_rgba(6,182,212,0.45)]">
-              GHAFFAR.
-            </span>
-          </h1>
-        </FadeIn>
-
-        <FadeIn delay={300}>
-          <p className="text-base font-mono text-slate-300 flex items-start gap-2">
-            <span className="text-emerald-500 shrink-0">Specializing in:</span>
-            <span className="text-slate-200 leading-relaxed">{currentRole}</span>
-          </p>
-        </FadeIn>
-
-        <FadeIn delay={400}>
-          <p className="text-slate-200 leading-relaxed text-base border-l-2 border-cyan-500/30 pl-4">
-            I help businesses secure their systems, improve cloud infrastructure, and solve technical problems with clear and practical solutions.
-          </p>
-        </FadeIn>
-
-        <FadeIn delay={470}>
-          <div className="grid grid-cols-2 gap-2">
-            {[
-              { label: 'Repos', value: 'Live Sync' },
-              { label: 'Certs', value: '03+' },
-              { label: 'Focus', value: 'Security' },
-              { label: 'Status', value: 'Available' }
-            ].map((metric) => (
-              <div key={metric.label} className="rounded-lg border border-slate-700/90 bg-slate-900/65 px-2.5 py-2 backdrop-blur-sm">
-                <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500">{metric.label}</p>
-                <p className="text-sm font-semibold text-slate-100">{metric.value}</p>
-              </div>
-            ))}
-          </div>
-        </FadeIn>
-
-        <FadeIn delay={500} className="space-y-3">
-          <a
-            href="https://www.linkedin.com/in/talha-ghaffar/"
-            target="_blank"
-            rel="noreferrer"
-            className="inline-flex w-full justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-emerald-400/70 bg-emerald-500/15 text-emerald-100 text-sm font-semibold"
-          >
-            Let&apos;s Work Together
-            <ArrowRight size={15} />
-          </a>
-          <a
-            href="#projects"
-            onClick={(e) => {
-              e.preventDefault();
-              onNavigate('projects');
-            }}
-            className="inline-flex w-full justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-slate-600 bg-slate-900/85 text-slate-100 text-sm"
-          >
-            Explore Projects
-            <Sparkles size={14} className="text-cyan-400" />
-          </a>
-        </FadeIn>
-
-        <FadeIn delay={600}>
-          <div className="rounded-2xl border border-slate-800 bg-slate-900/70 p-3 shadow-lg">
-            <img
-              src="/photo.png"
-              alt="Talha Ghaffar"
-              className="h-64 w-full rounded-xl object-cover"
-            />
-          </div>
-        </FadeIn>
-      </div>
-    );
-  }
+  const currentFocus = useTypewriter(cvData.focusAreas, 60, 1800, !isMobile);
 
   return (
-    <div className="min-h-[85vh] flex flex-col justify-center pt-20 md:pt-20">
-      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center md:items-start">
+    <div className="min-h-[80vh] flex flex-col justify-center pt-8">
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-8 lg:gap-12 items-center">
         <div className="md:col-span-7 space-y-6 lg:space-y-8">
           <FadeIn delay={100}>
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/70 border border-emerald-400/60 backdrop-blur-md shadow-[0_0_18px_rgba(16,185,129,0.28)]">
-              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-[pulseGlow_1.6s_ease-in-out_infinite]" />
-              <span className="text-xs font-mono text-emerald-100">Available for Freelance and Full-Time Roles</span>
+            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-400/50 bg-emerald-500/10 px-3 py-1 text-xs font-mono text-emerald-100 backdrop-blur-md">
+              <span className="h-2 w-2 rounded-full bg-emerald-400 animate-[pulseGlow_1.6s_ease-in-out_infinite]" />
+              Final year Computer Science student at UMT
             </div>
           </FadeIn>
 
           <FadeIn delay={200}>
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight relative">
-              <span className="absolute -inset-x-8 -inset-y-6 -z-10 bg-[radial-gradient(circle_at_40%_50%,rgba(6,182,212,0.20),transparent_52%)] animate-[heroGlow_6s_ease-in-out_infinite]" />
+              <span className="absolute -inset-x-8 -inset-y-6 -z-10 bg-[radial-gradient(circle_at_40%_50%,rgba(6,182,212,0.18),transparent_52%)] animate-[heroGlow_6s_ease-in-out_infinite]" />
               <span className="block text-slate-100">TALHA</span>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300 drop-shadow-[0_0_20px_rgba(6,182,212,0.45)]">
-                GHAFFAR.
-              </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-300 via-emerald-300 to-amber-300">GHAFFAR.</span>
             </h1>
           </FadeIn>
 
           <FadeIn delay={300} className="h-10 md:h-12">
             <p className="text-base sm:text-lg md:text-xl font-mono text-slate-300 flex items-center gap-2">
-              <span className="text-emerald-500">Specializing in:</span>
-              <span className="text-slate-200">{currentRole}</span>
+              <span className="text-emerald-500">Focus:</span>
+              <span className="text-slate-100">{currentFocus}</span>
               <span className="w-2 h-5 bg-emerald-500 animate-[pulse_1s_infinite]" />
             </p>
           </FadeIn>
 
           <FadeIn delay={400}>
-            <p className="text-slate-200 max-w-xl leading-relaxed text-base sm:text-lg border-l-2 border-cyan-500/30 pl-4">
-              I help businesses secure their systems, improve cloud infrastructure, and solve technical problems with clear and practical solutions.
+            <p className="text-slate-200 max-w-2xl leading-relaxed text-base sm:text-lg border-l-2 border-cyan-500/30 pl-4">
+              {cvData.profile.summary}
             </p>
-          </FadeIn>
-
-          <FadeIn delay={470}>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 max-w-2xl">
-              {[
-                { label: 'GitHub Repos', value: 'Live Sync' },
-                { label: 'Certifications', value: '03+' },
-                { label: 'Focus', value: 'Security' },
-                { label: 'Status', value: 'Available' }
-              ].map((metric) => (
-                <div key={metric.label} className="rounded-lg border border-slate-700/90 bg-slate-900/65 px-2.5 sm:px-3 py-2 backdrop-blur-sm hover:border-cyan-400/50 transition-colors duration-300">
-                  <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500">{metric.label}</p>
-                  <p className="text-sm font-semibold text-slate-100">{metric.value}</p>
-                </div>
-              ))}
-            </div>
           </FadeIn>
 
           <FadeIn delay={500} className="pt-2 flex flex-wrap gap-3 items-center">
             <div className="flex w-full sm:w-auto flex-col sm:flex-row flex-wrap gap-2 sm:gap-3 items-stretch sm:items-center">
-              <a
-                href="https://www.linkedin.com/in/talha-ghaffar/"
-                target="_blank"
-                rel="noreferrer"
-                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-emerald-400/70 bg-emerald-500/15 text-emerald-100 hover:bg-emerald-500/30 hover:border-emerald-200 transition-all text-sm font-semibold shadow-[0_0_12px_rgba(16,185,129,0.25)]"
+              <button
+                onClick={() => onNavigate('about')}
+                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-emerald-400/70 bg-emerald-500/15 px-4 py-2.5 text-sm font-semibold text-emerald-100 hover:bg-emerald-500/25 transition-all"
               >
-                Let&apos;s Work Together
+                View Profile & Experience
                 <ArrowRight size={15} />
-              </a>
-              <a
-                href="#projects"
-                onClick={(e) => {
-                  e.preventDefault();
-                  onNavigate('projects');
-                }}
-                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 px-4 py-2.5 rounded-md border border-slate-600 bg-slate-900/85 text-slate-100 hover:text-white hover:border-cyan-300 transition-all text-sm"
+              </button>
+              <button
+                onClick={() => onNavigate('projects')}
+                className="inline-flex w-full sm:w-auto justify-center items-center gap-2 rounded-md border border-slate-600 bg-slate-900/85 px-4 py-2.5 text-sm text-slate-100 hover:text-white hover:border-cyan-300 transition-all"
               >
-                Explore Projects
+                View Skills & Projects
                 <Sparkles size={14} className="text-cyan-400" />
-              </a>
+              </button>
             </div>
 
             <div className="flex gap-3 ml-0 sm:ml-2">
-              <a href="https://github.com/talha-ghaffar-ch" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-700 hover:border-white hover:text-white text-slate-300 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(255,255,255,0.22)]">
-                <FaGithub size={20} />
-              </a>
-              <a href="https://www.linkedin.com/in/talha-ghaffar/" target="_blank" rel="noreferrer" className="p-3 rounded-full bg-slate-900 border border-slate-700 hover:border-cyan-300 hover:text-cyan-300 text-slate-300 transition-all hover:scale-110 hover:shadow-[0_0_15px_rgba(34,211,238,0.35)]">
+              <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" aria-label="Open LinkedIn profile" className="p-3 rounded-full bg-slate-900 border border-slate-700 text-slate-300 transition-all hover:scale-110 hover:border-cyan-300 hover:text-cyan-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70">
                 <FaLinkedinIn size={20} />
+              </a>
+              <a href={cvData.links.github} target="_blank" rel="noreferrer" aria-label="Open GitHub profile" className="p-3 rounded-full bg-slate-900 border border-slate-700 text-slate-300 transition-all hover:scale-110 hover:border-white hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-slate-200/70">
+                <FaGithub size={20} />
               </a>
             </div>
           </FadeIn>
         </div>
 
-        <div className="md:col-span-5 relative flex flex-col items-center gap-8 mt-12 md:mt-0">
+        <div className="md:col-span-5 relative flex flex-col items-center gap-8 mt-6 md:mt-0">
           <FadeIn delay={600} direction="scale" className="relative z-20 w-full flex justify-center">
-            <TiltCard glowColor="rgba(16, 185, 129, 0.4)" className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full p-2 group cursor-crosshair">
+            <div className="relative w-56 h-56 md:w-64 md:h-64 lg:w-72 lg:h-72 rounded-full p-2 group">
               <div className="absolute inset-0 rounded-full border-t-2 border-l-2 border-emerald-500/50 animate-[spin_6s_linear_infinite] opacity-50 group-hover:opacity-100 group-hover:border-emerald-400 transition-all" />
               <div className="absolute inset-[-10px] rounded-full border-b-2 border-r-2 border-cyan-500/30 animate-[spin_4s_linear_infinite_reverse] opacity-30 group-hover:opacity-80 transition-all" />
               <div className="absolute inset-[-20px] rounded-full border-t-2 border-rose-500/20 animate-[spin_8s_linear_infinite] border-dashed" />
@@ -621,513 +389,342 @@ const HomeView = ({ onNavigate, isMobile }) => {
                 <Terminal size={20} className="text-orange-400" />
               </div>
 
-              <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 relative z-10 bg-slate-800">
-                <img
-                  src="/photo.png"
-                  alt="Talha Ghaffar"
-                  className="w-full h-full object-cover filter grayscale-[80%] contrast-125 brightness-90 group-hover:grayscale-0 group-hover:contrast-100 group-hover:brightness-100 group-hover:scale-110 transition-all duration-700 ease-out"
-                />
-                <div className="absolute inset-0 bg-emerald-500/10 mix-blend-overlay group-hover:bg-transparent transition-colors duration-500" />
-                <div className="absolute top-0 left-0 w-full h-1 bg-emerald-400/50 shadow-[0_0_10px_rgba(16,185,129,1)] opacity-0 group-hover:opacity-100 group-hover:animate-[scan_2s_ease-in-out_infinite]" />
+              <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 relative z-10 bg-slate-800 flex items-center justify-center text-center p-8">
+                <div>
+                  <p className="text-xs font-mono tracking-[0.3em] uppercase text-slate-400 mb-3">Public Portfolio</p>
+                  <p className="text-lg font-semibold text-white">Privacy-safe profile view</p>
+                  <p className="mt-2 text-sm text-slate-400">Public highlights, experience, projects, and certifications only.</p>
+                </div>
               </div>
-            </TiltCard>
+            </div>
           </FadeIn>
 
           <FadeIn delay={700} direction="up" className="w-full flex justify-center z-20">
-            <ContactTerminal />
-          </FadeIn>
-        </div>
-      </div>
-
-      <FadeIn delay={900}>
-        <SkillsMarquee />
-      </FadeIn>
-    </div>
-  );
-};
-
-const AboutView = () => {
-  return (
-    <div className="py-12 space-y-12">
-      <FadeIn>
-        <div className="relative flex items-center gap-3 mb-8 pb-4">
-          <TerminalSquare className="text-emerald-500" size={28} />
-          <h2 className="text-2xl font-bold font-mono text-white">About Me <span className="text-slate-600">// Experience & Education</span></h2>
-          <GlowingLine />
-        </div>
-      </FadeIn>
-
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <FadeIn delay={100} className="lg:col-span-5">
-          <TiltCard glowColor="rgba(14, 165, 233, 0.0)" className="h-full">
-            <GlowingBorder rounding="rounded-xl" className="h-full" innerClassName="p-8 bg-slate-900/60 backdrop-blur-md">
-              <h3 className="text-xl font-bold text-white mb-6 flex items-center gap-2">
-                <Shield size={20} className="text-cyan-400" /> Executive Summary
-              </h3>
-              <div className="space-y-4 text-slate-400 leading-relaxed text-sm">
-                <p>
-                  I am a Certified Ethical Hacker and Cloud Solutions Architect with hands-on experience in Cybersecurity, Penetration Testing, and Cloud Infrastructure.
-                </p>
-                <p>
-                  Currently pursuing my BS in Computer Science from UMT, I am passionate about building Secure, Scalable, and High-Performing IT Solutions.
-                </p>
-                <div className="pt-4 mt-4 border-t border-slate-800/80">
-                  <p className="text-slate-300 font-medium mb-2">I specialize in:</p>
-                  <ul className="space-y-2 font-mono text-xs">
-                    <li className="flex gap-2"><span className="text-emerald-500">▹</span> <span>Ethical Hacking & Pen Testing</span></li>
-                    <li className="flex gap-2"><span className="text-emerald-500">▹</span> <span>Cloud Architecture (AWS & GCP)</span></li>
-                    <li className="flex gap-2"><span className="text-emerald-500">▹</span> <span>Network & IT Administration</span></li>
-                    <li className="flex gap-2"><span className="text-emerald-500">▹</span> <span>Cybersecurity Analysis</span></li>
-                  </ul>
-                </div>
-                <p className="pt-2 italic text-slate-500">
-                  "I enjoy solving complex problems, optimizing systems, and turning ideas into impactful solutions."
-                </p>
-              </div>
-            </GlowingBorder>
-          </TiltCard>
-        </FadeIn>
-
-        <div className="lg:col-span-7 space-y-6">
-          <FadeIn delay={200}>
-            <div className="relative pl-8 border-l-2 border-slate-800 space-y-8">
-              <div className="relative group">
-                <div className="absolute -left-[41px] top-1 bg-slate-950 p-1 rounded-full border border-emerald-500 group-hover:scale-125 group-hover:bg-emerald-500 transition-all z-10">
-                  <Briefcase size={16} className="text-emerald-400 group-hover:text-black" />
-                </div>
-                <GlowingBorder rounding="rounded-lg" innerClassName="p-6 bg-slate-900/40">
-                  <div className="flex flex-wrap justify-between items-start mb-2 gap-2">
-                    <div>
-                      <h4 className="text-lg font-bold text-white">Information Technology Specialist</h4>
-                      <p className="text-cyan-400 font-mono text-sm">Pagri Studio • Freelance</p>
-                    </div>
-                    <span className="text-xs font-mono bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-700">Oct 2023 - Present</span>
-                  </div>
-                  <p className="text-xs text-slate-500 mb-4">Liaquatpur, Punjab, Pakistan • Remote</p>
-                  <ul className="space-y-2 text-sm text-slate-400">
-                    <li className="flex gap-2 hover:text-slate-300 transition-colors"><span className="text-emerald-600">▹</span> Manage All IT Operations At Pagri Studio</li>
-                    <li className="flex gap-2 hover:text-slate-300 transition-colors"><span className="text-emerald-600">▹</span> Handle Hardware, Software, And Network Support</li>
-                    <li className="flex gap-2 hover:text-slate-300 transition-colors"><span className="text-emerald-600">▹</span> Troubleshoot Technical Issues And Provide Solutions</li>
-                    <li className="flex gap-2 hover:text-slate-300 transition-colors"><span className="text-emerald-600">▹</span> Ensure Smooth Day-To-Day IT Workflow</li>
-                    <li className="flex gap-2 hover:text-slate-300 transition-colors"><span className="text-emerald-600">▹</span> Hands-On Experience In System Administration</li>
-                  </ul>
-                </GlowingBorder>
-              </div>
-
-              <div className="relative group">
-                <div className="absolute -left-[41px] top-1 bg-slate-950 p-1 rounded-full border border-cyan-500 group-hover:scale-125 group-hover:bg-cyan-500 transition-all z-10">
-                  <GraduationCap size={16} className="text-cyan-400 group-hover:text-black" />
-                </div>
-                <GlowingBorder rounding="rounded-lg" glowColor="#0ea5e9" innerClassName="p-6 bg-slate-900/40">
-                  <div className="flex flex-wrap justify-between items-start mb-2 gap-2">
-                    <div>
-                      <h4 className="text-lg font-bold text-white">Bachelor&apos;s Degree, Computer Science</h4>
-                      <p className="text-emerald-400 font-mono text-sm">University of Management and Technology - UMT</p>
-                    </div>
-                    <span className="text-xs font-mono bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-700">Oct 2023 - Oct 2027</span>
-                  </div>
-                </GlowingBorder>
+            <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl">
+              <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-3">Public Profiles</p>
+              <div className="grid gap-3 sm:grid-cols-2">
+                <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-sky-500/40 transition-colors">
+                  <span>LinkedIn</span>
+                  <ArrowRight size={14} className="text-sky-400" />
+                </a>
+                <a href={cvData.links.github} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-white/40 transition-colors">
+                  <span>GitHub</span>
+                  <ArrowRight size={14} className="text-slate-300" />
+                </a>
               </div>
             </div>
           </FadeIn>
         </div>
       </div>
+
+      <FadeIn delay={900}>
+        <div className="mt-10">
+          <SkillStrip />
+        </div>
+      </FadeIn>
+
+      <FadeIn delay={1000} className="mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {cvData.proofPoints.map((item) => {
+            const ProofIcon = item.icon;
+            return (
+              <div key={item.title} className="rounded-2xl border border-slate-800 bg-slate-900/55 p-5 backdrop-blur-md shadow-[0_0_24px_rgba(6,182,212,0.04)]">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="rounded-lg border border-slate-800 bg-slate-950/70 p-2">
+                    <ProofIcon size={18} className="text-emerald-400" />
+                  </div>
+                  <h3 className="text-base font-bold text-white">{item.title}</h3>
+                </div>
+                <p className="text-sm text-slate-400 leading-relaxed">{item.description}</p>
+              </div>
+            );
+          })}
+        </div>
+      </FadeIn>
     </div>
   );
 };
 
-const ProjectsView = () => {
-  const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [loadError, setLoadError] = useState('');
+const AboutView = () => (
+  <div className="py-12 space-y-12">
+    <FadeIn>
+      <SectionHeader icon={TerminalSquare} title="Profile" subtitle="Experience & Education" />
+    </FadeIn>
 
-  useEffect(() => {
-    let isMounted = true;
-
-    const colors = [
-      { color: 'from-emerald-500/20 to-teal-500/20', glowColor: '#10b981' },
-      { color: 'from-cyan-500/20 to-blue-500/20', glowColor: '#0ea5e9' },
-      { color: 'from-emerald-500/20 to-teal-500/20', glowColor: '#10b981' },
-      { color: 'from-orange-500/20 to-rose-500/20', glowColor: '#f97316' }
-    ];
-
-    const iconForRepo = (repo) => {
-      const lang = (repo.language || '').toLowerCase();
-      const searchable = `${repo.name || ''} ${repo.description || ''}`.toLowerCase();
-
-      if (searchable.includes('security') || searchable.includes('pentest') || searchable.includes('encryption') || searchable.includes('vulnerability') || searchable.includes('cyber')) {
-        return Shield;
-      }
-      if (searchable.includes('cloud') || searchable.includes('aws') || searchable.includes('gcp') || searchable.includes('docker') || searchable.includes('kubernetes')) {
-        return Cloud;
-      }
-      if (searchable.includes('trading') || searchable.includes('analytics') || searchable.includes('dashboard')) {
-        return Activity;
-      }
-      if (searchable.includes('ai') || searchable.includes('ml') || searchable.includes('model') || searchable.includes('automation') || searchable.includes('bot')) {
-        return Cpu;
-      }
-      if (searchable.includes('network') || searchable.includes('terminal') || searchable.includes('cli') || searchable.includes('script')) {
-        return Terminal;
-      }
-      if (searchable.includes('database') || searchable.includes('sql') || searchable.includes('mongo') || searchable.includes('postgres')) {
-        return Database;
-      }
-      if (searchable.includes('portfolio') || searchable.includes('website') || searchable.includes('react') || searchable.includes('frontend') || searchable.includes('ui')) {
-        return Code;
-      }
-
-      if (lang.includes('python')) return Lock;
-      if (lang.includes('javascript') || lang.includes('typescript')) return Code;
-      if (lang.includes('html') || lang.includes('css')) return Code;
-      if (lang.includes('shell') || lang.includes('bash')) return Terminal;
-      if (lang.includes('sql')) return Database;
-      if (lang.includes('docker')) return Cloud;
-
-      return FolderGit2;
-    };
-
-    const fetchProjects = async () => {
-      try {
-        const response = await fetch('https://api.github.com/users/talha-ghaffar-ch/repos?per_page=100&sort=updated');
-        if (!response.ok) throw new Error('Unable to fetch GitHub repositories.');
-
-        const repos = await response.json();
-        const mapped = repos
-          .filter((repo) => !repo.fork)
-          .map((repo, index) => {
-            const style = colors[index % colors.length];
-            const tech = [repo.language || 'General'];
-            if (repo.stargazers_count > 0) tech.push(`${repo.stargazers_count} Stars`);
-            tech.push('GitHub');
-
-            return {
-              title: repo.name,
-              type: `${repo.language || 'General'} / Open Source`,
-              description: repo.description || 'No description provided yet.',
-              tech,
-              stars: repo.stargazers_count || 0,
-              updatedAt: repo.updated_at,
-              icon: iconForRepo(repo),
-              link: repo.html_url,
-              color: style.color,
-              glowColor: style.glowColor
-            };
-          });
-
-        if (isMounted) {
-          setProjects(mapped);
-          setLoadError('');
-        }
-      } catch (error) {
-        if (isMounted) {
-          setLoadError('Failed to load projects from GitHub. Please try again later.');
-        }
-      } finally {
-        if (isMounted) {
-          setIsLoading(false);
-        }
-      }
-    };
-
-    fetchProjects();
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  const sortedProjects = [...projects].sort((a, b) => b.stars - a.stars);
-  const featuredProjects = sortedProjects.slice(0, 2);
-  const remainingProjects = sortedProjects.slice(2);
-  const displayedProjects = remainingProjects.length > 0 ? remainingProjects : sortedProjects;
-
-  return (
-    <div id="projects" className="py-12 space-y-10">
-      <FadeIn>
-        <div className="relative flex items-center gap-3 mb-8 pb-4">
-          <FolderGit2 className="text-cyan-400" size={28} />
-          <h2 className="text-2xl font-bold font-mono text-white">Projects <span className="text-slate-600">// Live from GitHub</span></h2>
-          <GlowingLine />
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <FadeIn delay={100} className="lg:col-span-5 space-y-6">
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-8 backdrop-blur-md h-full">
+          <h3 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+            <Shield size={20} className="text-cyan-400" /> About Me
+          </h3>
+          <p className="text-slate-300 leading-relaxed text-sm">{cvData.profile.summary}</p>
         </div>
-      </FadeIn>
 
-      {isLoading && (
-        <p className="text-sm font-mono text-slate-500">Fetching projects from GitHub...</p>
-      )}
-
-      {loadError && (
-        <p className="text-sm font-mono text-rose-400">{loadError}</p>
-      )}
-
-      {featuredProjects.length > 0 && (
-        <div className="space-y-4">
-          <p className="text-xs font-mono tracking-wider text-cyan-400/90">FEATURED REPOSITORIES</p>
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {featuredProjects.map((project, i) => (
-              <FadeIn key={`featured-${project.link}`} delay={i * 120}>
-                <GlowingBorder rounding="rounded-xl" glowColor={project.glowColor} className="h-full" innerClassName="bg-slate-900/55 backdrop-blur-sm p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full border border-cyan-500/40 bg-cyan-500/10 text-[10px] font-mono text-cyan-200">Featured</div>
-                    <a href={project.link} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-emerald-300 transition-colors"><ExternalLink size={16} /></a>
-                  </div>
-                  <h3 className="text-xl font-bold text-white mb-2">{project.title}</h3>
-                  <p className="text-sm text-slate-400 mb-4 leading-relaxed">{project.description}</p>
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {project.tech.map((tech, j) => (
-                      <span key={`featured-tech-${j}`} className="px-2 py-1 bg-slate-950 border border-slate-800 rounded text-[10px] font-mono text-slate-300">{tech}</span>
-                    ))}
-                  </div>
-                  <div className="flex items-center gap-4 text-[11px] font-mono text-slate-500">
-                    <span className="inline-flex items-center gap-1"><Star size={12} className="text-yellow-400" /> {project.stars}</span>
-                    <span className="inline-flex items-center gap-1"><CalendarDays size={12} className="text-cyan-400" /> {new Date(project.updatedAt).toLocaleDateString()}</span>
-                  </div>
-                </GlowingBorder>
-              </FadeIn>
-            ))}
+        <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-md">
+          <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <Lock size={18} className="text-emerald-400" /> Public Snapshot
+          </h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3">
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Current Status</p>
+              <p className="text-slate-100">Final year Computer Science student at UMT</p>
+            </div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3">
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Primary Focus</p>
+              <p className="text-slate-100">Cloud, Infrastructure, Cybersecurity</p>
+            </div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3 sm:col-span-2">
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Professional Scope</p>
+              <p className="text-slate-100">Web and mobile app development, security, and practical systems work</p>
+            </div>
           </div>
         </div>
-      )}
-
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-        {displayedProjects.map((project, i) => (
-          <FadeIn key={i} delay={i * 150}>
-            <TiltCard glowColor="rgba(0,0,0,0)" className="h-full">
-              <GlowingBorder rounding="rounded-xl" glowColor={project.glowColor} className="h-full" innerClassName="flex flex-col bg-slate-900/50 backdrop-blur-sm">
-                <div className="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-cyan-300/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                <div className={`h-32 bg-gradient-to-br ${project.color} border-b border-slate-800/50 relative overflow-hidden flex items-center justify-center`}>
-                  <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjMWUyOTNiIi8+CjxwYXRoIGQ9Ik0wIDBMNCA0Wk00IDBMMCA0WiIgc3Ryb2tlPSIjMGYxNzJhIiBzdHJva2Utd2lkdGg9IjEiLz4KPC9zdmc+')] opacity-20" />
-                  {(() => {
-                    const ProjectIcon = project.icon || FolderGit2;
-                    return <ProjectIcon size={48} className="text-white/80 group-hover:scale-110 group-hover:text-white group-hover:rotate-3 transition-all duration-500 drop-shadow-lg relative z-10" />;
-                  })()}
-                </div>
-
-                <div className="p-6 flex flex-col justify-between h-[calc(100%-8rem)]">
-                  <div>
-                    <div className="flex justify-between items-start mb-2 gap-3">
-                      <p className="text-xs font-mono text-slate-500">{project.type}</p>
-                      <a href={project.link} target="_blank" rel="noreferrer" className="text-slate-500 hover:text-emerald-400 transition-colors" aria-label={`Open ${project.title}`}>
-                        <ExternalLink size={16} />
-                      </a>
-                    </div>
-                    <h3 className="text-xl font-bold text-slate-100 mb-3 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-white group-hover:to-slate-400 transition-all">
-                      {project.title}
-                    </h3>
-                    <p className="text-sm text-slate-400 leading-relaxed mb-6">
-                      {project.description}
-                    </p>
-
-                    <div className="flex items-center gap-4 text-[11px] font-mono text-slate-500 border-t border-slate-800/60 pt-3 mb-3">
-                      <span className="inline-flex items-center gap-1"><Star size={12} className="text-yellow-400" /> {project.stars}</span>
-                      <span className="inline-flex items-center gap-1"><CalendarDays size={12} className="text-cyan-400" /> {new Date(project.updatedAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-
-                  <div className="mt-auto pt-3">
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {project.tech.map((tech, j) => (
-                        <span key={j} className="px-2 py-1 bg-slate-950 border border-slate-800 rounded text-[10px] font-mono text-slate-300 group-hover:border-emerald-500/30 transition-colors">
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                    <a
-                      href={project.link}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center gap-2 px-3 py-2 rounded-md text-xs font-mono border border-emerald-500/40 text-emerald-300 hover:text-emerald-200 hover:border-emerald-300 hover:bg-emerald-500/10 transition-all"
-                    >
-                      View Project
-                      <ExternalLink size={12} />
-                    </a>
-                  </div>
-                </div>
-              </GlowingBorder>
-            </TiltCard>
-          </FadeIn>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-const VaultView = () => {
-  const certs = [
-    {
-      title: 'PenTest Cyber Specialist Program',
-      issuer: 'Nationwide IT Skillsets Expansion Program - NITSEP',
-      date: 'Issued Mar 2026',
-      id: 'Credential ID EAE9749217',
-      verifyLink: 'https://nitsep.pk/course-certificate/EAE9749217',
-      icon: Shield,
-      color: 'text-rose-500',
-      bg: 'from-rose-500/10 to-transparent',
-      skills: 'Network Security Fundamentals (CCNA), Cybersecurity Monitoring'
-    },
-    {
-      title: 'AWS Cloud Foundations',
-      issuer: 'Amazon Web Services (AWS)',
-      date: 'Issued Nov 2025',
-      id: 'Credential ID 5bd0755e...',
-      verifyLink: 'https://www.linkedin.com/in/talha-ghaffar',
-      icon: Cloud,
-      color: 'text-orange-500',
-      bg: 'from-orange-500/10 to-transparent',
-      skills: 'Cloud Computing Concepts, Core Services, Architecture'
-    },
-    {
-      title: 'English Immersion (SD-100)',
-      issuer: 'University of Management and Technology - UMT',
-      date: 'Issued Feb 2026',
-      id: 'Credential ID F2023266045',
-      verifyLink: '',
-      icon: Code,
-      color: 'text-cyan-500',
-      bg: 'from-cyan-500/10 to-transparent',
-      skills: 'Professional Communication, Verbal & Written Fluency'
-    }
-  ];
-
-  const skillMatrix = [
-    'Penetration Testing', 'Cloud Security', 'AWS', 'IT Security Operations',
-    'Network Administration', 'Cybersecurity Analysis', 'Cloud Architecture', 'System Administration'
-  ];
-
-  return (
-    <div className="py-12 space-y-12">
-      <FadeIn>
-        <div className="relative flex items-center gap-3 mb-8 pb-4">
-          <Database className="text-orange-500" size={28} />
-          <h2 className="text-2xl font-bold font-mono text-white">Certifications <span className="text-slate-600">// Verified Credentials</span></h2>
-          <GlowingLine />
-        </div>
       </FadeIn>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <div className="lg:col-span-8 space-y-4">
-          <h3 className="text-sm font-mono text-slate-500 mb-1">LICENSES & CERTIFICATIONS</h3>
-          <p className="text-xs text-slate-500 mb-4">Use "Verify" to open proof links for available certifications.</p>
-          {certs.map((cert, i) => (
-            <FadeIn key={i} delay={i * 100}>
-              <GlowingBorder rounding="rounded-lg" glowColor={cert.title.includes('AWS') ? '#f97316' : cert.title.includes('English') ? '#0ea5e9' : '#f43f5e'}>
-                <div className="bg-slate-900/40 p-5 flex gap-4 items-start hover:bg-slate-800/80 transition-all relative overflow-hidden group cursor-default">
-                  <div className={`absolute top-0 right-0 w-32 h-full bg-gradient-to-l ${cert.bg} opacity-0 group-hover:opacity-100 transition-opacity duration-500`} />
+      <div className="lg:col-span-7 space-y-8">
+        <FadeIn delay={200}>
+          <div className="space-y-4">
+            <h3 className="text-sm font-mono text-slate-500 tracking-wider">WORK EXPERIENCE</h3>
+            <div className="space-y-4">
+              {cvData.experience.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-slate-800 bg-slate-900/45 p-6">
+                  <div className="flex flex-wrap justify-between gap-2 mb-2">
+                    <div>
+                      <h4 className="text-lg font-bold text-white">{item.title}</h4>
+                      <p className="text-cyan-400 font-mono text-sm">{item.organization} • {item.location}</p>
+                    </div>
+                    <span className="text-xs font-mono bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-700">{item.period}</span>
+                  </div>
+                  <p className="text-sm text-slate-400 leading-relaxed">{item.details}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
 
-                  <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 shadow-inner group-hover:scale-110 transition-transform duration-300 relative z-10">
-                    <cert.icon size={24} className={cert.color} />
+        <FadeIn delay={300}>
+          <div className="space-y-4">
+            <h3 className="text-sm font-mono text-slate-500 tracking-wider">EDUCATION</h3>
+            <div className="space-y-4">
+              {cvData.education.map((item) => (
+                <div key={item.title} className="rounded-2xl border border-slate-800 bg-slate-900/45 p-6">
+                  <div className="flex flex-wrap justify-between gap-2 mb-2">
+                    <div>
+                      <h4 className="text-lg font-bold text-white">{item.title}</h4>
+                      <p className="text-emerald-400 font-mono text-sm">{item.organization}</p>
+                    </div>
+                    <span className="text-xs font-mono bg-slate-800 text-slate-300 px-2 py-1 rounded border border-slate-700">{item.period}</span>
+                  </div>
+                  <p className="text-sm text-slate-400 leading-relaxed">{item.details}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={400}>
+          <div className="space-y-4">
+            <h3 className="text-sm font-mono text-slate-500 tracking-wider">LANGUAGES</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {cvData.languages.map((language) => (
+                <div key={language.name} className="rounded-2xl border border-slate-800 bg-slate-900/45 p-5">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-lg font-bold text-white">{language.name}</h4>
+                    <span className="text-xs font-mono text-cyan-300 border border-cyan-500/30 rounded px-2 py-1">{language.level}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </FadeIn>
+      </div>
+    </div>
+  </div>
+);
+
+const ProjectsView = () => (
+  <div className="py-12 space-y-12">
+    <FadeIn>
+      <SectionHeader icon={FolderGit2} title="Skills & Projects" subtitle="Public work only" />
+    </FadeIn>
+
+    <FadeIn delay={100}>
+      <SkillStrip />
+    </FadeIn>
+
+    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      {cvData.skills.map((skillGroup, index) => {
+        const SkillIcon = skillGroup.icon;
+        return (
+          <FadeIn key={skillGroup.title} delay={index * 120}>
+            <div className="h-full rounded-2xl border border-slate-800 bg-slate-900/50 p-6 backdrop-blur-sm">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="rounded-lg border border-slate-800 bg-slate-950/70 p-2">
+                  <SkillIcon size={18} className="text-emerald-400" />
+                </div>
+                <h3 className="text-lg font-bold text-white">{skillGroup.title}</h3>
+              </div>
+              <p className="text-sm text-slate-400 leading-relaxed">{skillGroup.description}</p>
+            </div>
+          </FadeIn>
+        );
+      })}
+    </div>
+
+    <div className="space-y-4">
+      <FadeIn>
+        <div className="relative flex items-center gap-3 mb-4 pb-4">
+          <Activity className="text-emerald-400" size={24} />
+          <h3 className="text-xl font-bold text-white">Projects</h3>
+        </div>
+      </FadeIn>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {cvData.projects.map((project, index) => {
+          const ProjectIcon = project.icon;
+          return (
+            <FadeIn key={project.title} delay={index * 120}>
+              <div className="h-full rounded-2xl border border-slate-800 bg-slate-900/50 backdrop-blur-sm overflow-hidden">
+                <div className={`h-32 bg-gradient-to-br ${project.accent} border-b border-slate-800/50 flex items-center justify-center`}>
+                  <ProjectIcon size={44} className="text-white/85" />
+                </div>
+                <div className="p-6 space-y-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <h4 className="text-xl font-bold text-white">{project.title}</h4>
+                    <a href={project.link} target="_blank" rel="noreferrer" className="text-slate-400 hover:text-emerald-300 transition-colors" aria-label={`Open ${project.title}`}>
+                      <FaGithub size={18} />
+                    </a>
+                  </div>
+                  <p className="text-sm text-slate-400 leading-relaxed">{project.description}</p>
+                  <a href={project.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-emerald-500/40 px-3 py-2 text-xs font-mono text-emerald-300 hover:bg-emerald-500/10 transition-all">
+                    View on GitHub
+                    <ExternalLink size={12} />
+                  </a>
+                </div>
+              </div>
+            </FadeIn>
+          );
+        })}
+      </div>
+    </div>
+
+    <FadeIn delay={320}>
+      <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900/80 via-slate-900/60 to-slate-900/80 p-6 md:p-8 backdrop-blur-md">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
+          <div>
+            <p className="text-xs font-mono tracking-wider text-emerald-300/90 mb-2">FEATURED WORK</p>
+            <h3 className="text-2xl font-bold text-white">Public proof is built into the portfolio.</h3>
+          </div>
+          <p className="text-sm text-slate-400 max-w-xl">Each highlighted project links to a public repository, so reviewers can verify the code instead of relying only on summary text.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {cvData.projects.map((project) => (
+            <div key={`${project.title}-proof`} className="rounded-xl border border-slate-800 bg-slate-950/55 p-4">
+              <div className="flex items-center justify-between gap-3 mb-2">
+                <h4 className="text-base font-semibold text-white">{project.title}</h4>
+                <CheckCircle size={16} className="text-emerald-400" />
+              </div>
+              <p className="text-sm text-slate-400 leading-relaxed">{project.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </FadeIn>
+  </div>
+);
+
+const CertificationsView = () => (
+  <div className="py-12 space-y-12">
+    <FadeIn>
+      <SectionHeader icon={Database} title="Certifications" subtitle="Verified credentials" />
+    </FadeIn>
+
+    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      <div className="lg:col-span-8 space-y-4">
+        <h3 className="text-sm font-mono text-slate-500 mb-1">LICENSES & CERTIFICATIONS</h3>
+        <p className="text-xs text-slate-500 mb-4">Verification links are shown only where public proof is available.</p>
+        <div className="space-y-4">
+          {cvData.certifications.map((cert, index) => {
+            const CertIcon = cert.icon;
+            return (
+              <FadeIn key={cert.title} delay={index * 100}>
+                <div className="rounded-2xl border border-slate-800 bg-slate-900/40 p-5 flex gap-4 items-start hover:bg-slate-800/60 transition-all">
+                  <div className="bg-slate-950 p-3 rounded-lg border border-slate-800 shadow-inner">
+                    <CertIcon size={24} className={cert.color} />
                   </div>
 
-                  <div className="flex-1 relative z-10">
-                    <h4 className="text-lg font-bold text-slate-100 group-hover:text-white transition-colors">{cert.title}</h4>
+                  <div className="flex-1">
+                    <h4 className="text-lg font-bold text-slate-100">{cert.title}</h4>
                     <p className="text-sm text-slate-400">{cert.issuer}</p>
-                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-mono text-slate-500">
-                      <span>{cert.date}</span>
-                      <span className="hidden sm:inline">•</span>
-                      <span>{cert.id}</span>
-                    </div>
-                    <div className="mt-3 pt-3 border-t border-slate-800/50 text-xs text-slate-400 flex items-center gap-2 group-hover:text-emerald-400/80 transition-colors">
-                      <CheckCircle size={12} className="text-emerald-500" />
-                      <span className="truncate">Skills: {cert.skills}</span>
-                    </div>
+                    <p className="mt-3 text-sm text-slate-400 leading-relaxed">{cert.description}</p>
                     <div className="mt-3">
-                      {cert.verifyLink ? (
-                        <a
-                          href={cert.verifyLink}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-md border border-emerald-500/50 text-emerald-200 hover:text-emerald-100 hover:border-emerald-300 hover:bg-emerald-500/15 transition-all text-xs font-mono shadow-[0_0_10px_rgba(16,185,129,0.15)]"
-                        >
-                          <CheckCircle size={12} className="animate-[verifyPop_1.8s_ease-in-out_infinite]" />
-                          Verify Certificate
+                      {cert.link ? (
+                        <a href={cert.link} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-emerald-500/50 px-3 py-1.5 text-xs font-mono text-emerald-200 hover:bg-emerald-500/15 hover:text-emerald-100 transition-all">
+                          <CheckCircle size={12} />
+                          Open proof link
                           <ExternalLink size={12} />
                         </a>
                       ) : (
-                        <span className="inline-flex items-center px-3 py-1.5 rounded-md border border-slate-700 text-slate-500 text-xs font-mono">
-                          Verification Link Not Added
-                        </span>
+                        <span className="inline-flex items-center rounded-md border border-slate-700 px-3 py-1.5 text-xs font-mono text-slate-500">Verification link not added</span>
                       )}
                     </div>
                   </div>
                 </div>
-              </GlowingBorder>
-            </FadeIn>
-          ))}
-        </div>
-
-        <div className="lg:col-span-4 space-y-4">
-          <h3 className="text-sm font-mono text-slate-500 mb-4">CORE_COMPETENCIES</h3>
-          <FadeIn delay={300}>
-            <TiltCard glowColor="rgba(16, 185, 129, 0.0)">
-              <GlowingBorder rounding="rounded-xl" innerClassName="bg-slate-900/60 p-6">
-                <div className="flex flex-wrap gap-2">
-                  {skillMatrix.map((skill, i) => (
-                    <span
-                      key={i}
-                      className="px-3 py-2 bg-slate-950 border border-slate-700/50 rounded-md text-xs font-mono text-emerald-400/90 hover:text-emerald-300 hover:border-emerald-500 hover:bg-emerald-500/10 transition-all cursor-default"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-
-                <div className="mt-8 pt-6 border-t border-slate-800">
-                  <div className="flex items-center gap-3 text-slate-300 text-sm mb-4">
-                    <Cpu size={16} className="text-rose-500" /> Technical Arsenal
-                  </div>
-                  <div className="space-y-3">
-                    <div className="group">
-                      <div className="flex justify-between text-xs font-mono mb-1">
-                        <span className="text-slate-400 group-hover:text-white transition-colors">Offensive Security</span>
-                        <span className="text-cyan-400">90%</span>
-                      </div>
-                      <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden relative">
-                        <div className="h-full bg-cyan-500 w-[90%] absolute left-0 top-0 group-hover:shadow-[0_0_10px_rgba(34,211,238,0.8)] transition-shadow" />
-                      </div>
-                    </div>
-                    <div className="group">
-                      <div className="flex justify-between text-xs font-mono mb-1">
-                        <span className="text-slate-400 group-hover:text-white transition-colors">Cloud Infrastructure</span>
-                        <span className="text-orange-400">85%</span>
-                      </div>
-                      <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden relative">
-                        <div className="h-full bg-orange-500 w-[85%] absolute left-0 top-0 group-hover:shadow-[0_0_10px_rgba(249,115,22,0.8)] transition-shadow" />
-                      </div>
-                    </div>
-                    <div className="group">
-                      <div className="flex justify-between text-xs font-mono mb-1">
-                        <span className="text-slate-400 group-hover:text-white transition-colors">Python / Automation</span>
-                        <span className="text-emerald-400">80%</span>
-                      </div>
-                      <div className="h-1 w-full bg-slate-800 rounded-full overflow-hidden relative">
-                        <div className="h-full bg-emerald-500 w-[80%] absolute left-0 top-0 group-hover:shadow-[0_0_10px_rgba(16,185,129,0.8)] transition-shadow" />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </GlowingBorder>
-            </TiltCard>
-          </FadeIn>
+              </FadeIn>
+            );
+          })}
         </div>
       </div>
+
+      <div className="lg:col-span-4 space-y-4">
+        <h3 className="text-sm font-mono text-slate-500 mb-4">PUBLIC LINKS</h3>
+        <FadeIn delay={200}>
+          <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
+            <div className="grid gap-3">
+              <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-sky-500/40 transition-colors">
+                <span>LinkedIn</span>
+                <ArrowRight size={14} className="text-sky-400" />
+              </a>
+              <a href={cvData.links.github} target="_blank" rel="noreferrer" className="inline-flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-white/40 transition-colors">
+                <span>GitHub</span>
+                <ArrowRight size={14} className="text-slate-300" />
+              </a>
+            </div>
+          </div>
+        </FadeIn>
+
+        <FadeIn delay={300}>
+          <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-emerald-500/10 via-slate-900/70 to-cyan-500/10 p-6">
+            <div className="flex items-center gap-3 mb-3">
+              <Mail size={18} className="text-emerald-300" />
+              <h3 className="text-lg font-bold text-white">Public contact route</h3>
+            </div>
+            <p className="text-sm text-slate-400 leading-relaxed mb-4">For opportunities, use LinkedIn or GitHub messages so the site stays privacy-safe while still offering a direct professional channel.</p>
+            <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-emerald-500/50 px-3 py-2 text-xs font-mono text-emerald-200 hover:bg-emerald-500/15 transition-all">
+              Message on LinkedIn
+              <ExternalLink size={12} />
+            </a>
+          </div>
+        </FadeIn>
+      </div>
     </div>
-  );
-};
+  </div>
+);
 
 export default function App() {
   const [activeView, setActiveView] = useState('home');
-  const mobile = isMobileViewport();
+  const mobile = typeof window !== 'undefined' && window.matchMedia('(max-width: 767px)').matches;
 
   const navItems = [
     { id: 'home', label: 'HOME', icon: Terminal },
     { id: 'about', label: 'ABOUT', icon: TerminalSquare },
     { id: 'projects', label: 'PROJECTS', icon: FolderGit2 },
-    { id: 'vault', label: 'CERTS', icon: Database }
+    { id: 'certs', label: 'CERTS', icon: Database },
   ];
-  const activeIndex = Math.max(navItems.findIndex((item) => item.id === activeView), 0);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-slate-200 selection:bg-emerald-500/30 selection:text-emerald-200 font-sans relative">
-      {!mobile && <InteractiveBackground />}
+    <div className="min-h-screen bg-[#050505] text-slate-200 selection:bg-emerald-500/30 selection:text-emerald-200 font-sans relative scroll-smooth">
+      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:z-[60] focus:top-4 focus:left-4 focus:rounded-md focus:bg-slate-900 focus:px-4 focus:py-2 focus:text-sm focus:text-white focus:outline-none focus:ring-2 focus:ring-emerald-400">Skip to content</a>
       <div className="pointer-events-none fixed inset-0 z-[1]">
         <div className="absolute -top-20 -left-20 h-72 w-72 rounded-full bg-cyan-500/10 blur-[90px]" />
         <div className="absolute top-1/3 -right-28 h-80 w-80 rounded-full bg-emerald-500/10 blur-[110px]" />
@@ -1135,46 +732,30 @@ export default function App() {
 
       <nav className="fixed top-0 left-0 right-0 z-50 bg-[#050505]/80 backdrop-blur-xl border-b border-slate-800/80 shadow-2xl">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div
-            onClick={() => setActiveView('home')}
-            className="group flex items-center gap-2.5 cursor-pointer transition-opacity hover:opacity-90"
-          >
+          <button type="button" onClick={() => setActiveView('home')} className="group flex items-center gap-2.5 cursor-pointer transition-opacity hover:opacity-90 text-left">
             <div className="relative h-7 w-7 rounded-md border border-emerald-400/70 bg-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.2)]">
               <span className="absolute inset-1 rounded-sm bg-emerald-400/80 animate-[brandPulse_2.2s_ease-in-out_infinite]" />
               <span className="absolute inset-0 rounded-md border border-cyan-300/40 opacity-0 group-hover:opacity-100 transition-opacity" />
             </div>
             <div className="leading-tight">
-              <span className="block text-[13px] sm:text-sm font-semibold tracking-wide text-white">Talha Ghaffar</span>
-              <span className="block text-[10px] font-mono text-cyan-300/85">security.cloud.ops</span>
+              <span className="block text-[13px] sm:text-sm font-semibold tracking-wide text-white">{cvData.profile.name}</span>
+              <span className="block text-[10px] font-mono text-cyan-300/85">Public Portfolio</span>
             </div>
-          </div>
+          </button>
 
-          <GlowingBorder rounding="rounded-lg" className="hidden md:block min-w-[360px]" innerClassName="bg-slate-900/80">
-            <div className="relative grid grid-cols-4 gap-1 p-1">
-              <div
-                className="absolute left-1 top-1 bottom-1 rounded-md border border-emerald-500/60 bg-emerald-500/10 shadow-[0_0_12px_rgba(16,185,129,0.25)] transition-transform duration-300 ease-out"
-                style={{
-                  width: `calc((100% - 0.5rem) / ${navItems.length})`,
-                  transform: `translateX(calc(${activeIndex} * 100% + ${activeIndex} * 0.25rem))`
-                }}
-              />
-              {navItems.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveView(item.id)}
-                  className={`group relative z-10 flex items-center justify-center gap-2 px-3 py-1.5 rounded-md font-mono text-xs transition-all duration-300 overflow-hidden ${
-                    activeView === item.id
-                      ? 'text-emerald-300'
-                      : 'text-slate-400 hover:text-emerald-200'
-                  }`}
-                >
-                  <span className="absolute inset-y-0 -left-full w-1/2 bg-gradient-to-r from-transparent via-cyan-300/20 to-transparent group-hover:animate-[navSweep_0.8s_ease-out]" />
-                  <item.icon size={14} className={activeView === item.id ? 'text-emerald-500' : 'text-slate-500'} />
-                  {item.label}
-                </button>
-              ))}
-            </div>
-          </GlowingBorder>
+          <div className="hidden md:flex items-center gap-2 rounded-lg border border-slate-800 bg-slate-900/80 p-1">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => setActiveView(item.id)}
+                className={`flex items-center gap-2 rounded-md px-3 py-1.5 font-mono text-xs transition-all ${activeView === item.id ? 'text-emerald-300 bg-emerald-500/10' : 'text-slate-400 hover:text-emerald-200'}`}
+              >
+                <item.icon size={14} className={activeView === item.id ? 'text-emerald-500' : 'text-slate-500'} />
+                {item.label}
+              </button>
+            ))}
+          </div>
 
           <div className="md:hidden flex gap-4 text-xs font-mono text-emerald-500">
             <span className="animate-pulse flex items-center gap-2">
@@ -1184,24 +765,28 @@ export default function App() {
         </div>
       </nav>
 
-      <main className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-32 min-h-screen flex flex-col">
+      <main id="main-content" tabIndex={-1} className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 pt-24 pb-32 min-h-screen flex flex-col">
         <div key={activeView} className="flex-1 animate-[fadeIn_0.5s_ease-out]">
           {activeView === 'home' && <HomeView onNavigate={setActiveView} isMobile={mobile} />}
           {activeView === 'about' && <AboutView />}
           {activeView === 'projects' && <ProjectsView />}
-          {activeView === 'vault' && <VaultView />}
+          {activeView === 'certs' && <CertificationsView />}
         </div>
 
         <section className="mt-8 rounded-2xl border border-slate-800/80 bg-gradient-to-r from-slate-900/80 via-slate-900/70 to-slate-900/80 px-6 py-8 md:px-8 md:py-10 backdrop-blur-md shadow-[0_0_40px_rgba(16,185,129,0.08)]">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <p className="text-xs font-mono tracking-wider text-emerald-300/90 mb-2">READY TO COLLABORATE</p>
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Need secure and scalable IT solutions?</h3>
-              <p className="text-slate-400 max-w-2xl">From cybersecurity analysis to cloud architecture, I help teams ship reliable systems with confidence.</p>
+              <p className="text-xs font-mono tracking-wider text-emerald-300/90 mb-2">READY TO REVIEW</p>
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Public portfolio only, no private contact data.</h3>
+              <p className="text-slate-400 max-w-2xl">The site keeps the public CV content while omitting private fields like phone, email, birth data, and home address.</p>
             </div>
             <div className="flex flex-wrap gap-3">
-              <a href="https://www.linkedin.com/in/talha-ghaffar/" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md text-sm font-semibold bg-emerald-500/15 border border-emerald-500/60 text-emerald-200 hover:bg-emerald-500/25 transition-all">Contact on LinkedIn <ArrowRight size={14} /></a>
-              <a href="https://github.com/talha-ghaffar-ch" target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 px-4 py-2.5 rounded-md text-sm border border-slate-700 text-slate-200 hover:text-white hover:border-cyan-400 transition-all">View GitHub <FaGithub size={14} /></a>
+              <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-emerald-500/60 bg-emerald-500/15 px-4 py-2.5 text-sm font-semibold text-emerald-200 hover:bg-emerald-500/25 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/70">
+                LinkedIn <ArrowRight size={14} />
+              </a>
+              <a href={cvData.links.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-slate-700 px-4 py-2.5 text-sm text-slate-200 hover:text-white hover:border-cyan-400 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-cyan-300/70">
+                GitHub <FaGithub size={14} />
+              </a>
             </div>
           </div>
         </section>
@@ -1212,6 +797,7 @@ export default function App() {
           {navItems.map((item) => (
             <button
               key={item.id}
+              type="button"
               onClick={() => setActiveView(item.id)}
               className={`relative flex flex-col items-center justify-center w-full h-full space-y-1 rounded-md transition-all duration-300 px-1 ${
                 activeView === item.id
@@ -1221,7 +807,6 @@ export default function App() {
             >
               {activeView === item.id && <span className="absolute top-0 left-1/2 -translate-x-1/2 w-6 h-[2px] bg-emerald-400 rounded-full" />}
               <span className="relative">
-                {activeView === item.id && <span className="absolute -inset-2 rounded-full border border-emerald-400/70 animate-[pulseRing_1.8s_ease-in-out_infinite]" />}
                 <item.icon size={20} />
               </span>
               <span className="text-[11px] font-mono leading-none">{item.label}</span>
@@ -1231,42 +816,17 @@ export default function App() {
       </nav>
 
       <style dangerouslySetInnerHTML={{ __html: `
-        @keyframes shimmer {
-          100% { transform: translateX(100%); }
-        }
         @keyframes fadeIn {
           from { opacity: 0; transform: translateY(10px); }
           to { opacity: 1; transform: translateY(0); }
         }
         @keyframes marquee {
           0% { transform: translateX(0); }
-          100% { transform: translateX(-33.33%); }
+          100% { transform: translateX(-50%); }
         }
         @keyframes float {
           0%, 100% { transform: translateY(0px); }
           50% { transform: translateY(-15px); }
-        }
-        @keyframes scan {
-          0% { top: 0; opacity: 0; }
-          10% { opacity: 1; }
-          90% { opacity: 1; }
-          100% { top: 100%; opacity: 0; }
-        }
-        @keyframes glitch {
-          0%, 14% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0); }
-          15% { clip-path: polygon(0 15%, 100% 15%, 100% 30%, 0 30%); transform: translate(-2px, 2px); }
-          16%, 100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); transform: translate(0); }
-        }
-        .typing-animation {
-          animation: type 2s steps(40, end);
-        }
-        @keyframes type {
-          from { width: 0; }
-          to { width: 100%; }
-        }
-        @keyframes scanLine {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(500%); }
         }
         @keyframes pulseGlow {
           0%, 100% { box-shadow: 0 0 0 rgba(16,185,129,0.2); opacity: 0.85; }
@@ -1276,21 +836,13 @@ export default function App() {
           0%, 100% { opacity: 0.6; transform: scale(1); }
           50% { opacity: 1; transform: scale(1.04); }
         }
-        @keyframes navSweep {
-          from { transform: translateX(0); }
-          to { transform: translateX(320%); }
-        }
-        @keyframes verifyPop {
-          0%, 100% { transform: scale(1); }
-          50% { transform: scale(1.18); }
-        }
-        @keyframes pulseRing {
-          0%, 100% { opacity: 0.3; transform: scale(0.85); }
-          50% { opacity: 0.9; transform: scale(1.15); }
-        }
         @keyframes brandPulse {
           0%, 100% { transform: scale(0.82); opacity: 0.7; }
           50% { transform: scale(1); opacity: 1; }
+        }
+        @keyframes scanLine {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(500%); }
         }
         .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
         @media (prefers-reduced-motion: reduce) {
