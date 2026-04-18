@@ -371,7 +371,7 @@ const HomeView = ({ onNavigate, isMobile }) => {
               </div>
 
               <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 relative z-10 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-center">
-                <img src="/profile.png" alt="Talha Ghaffar" className="w-full h-full object-cover" />
+                <img src="/photo.png" alt="Talha Ghaffar" className="w-full h-full object-cover" />
               </div>
             </div>
           </FadeIn>
