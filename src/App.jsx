@@ -8,14 +8,10 @@ import {
   Database,
   ExternalLink,
   FolderGit2,
-  Lock,
-  Mail,
   Shield,
   Sparkles,
   Terminal,
   TerminalSquare,
-  BadgeCheck,
-  Monitor,
 } from 'lucide-react';
 import { FaGithub, FaLinkedinIn } from 'react-icons/fa6';
 
@@ -254,23 +250,7 @@ const cvData = {
       accent: 'from-cyan-500/20 to-blue-500/20',
     },
   ],
-  proofPoints: [
-    {
-      title: 'Verified credentials',
-      description: 'Public proof is available for selected certifications through issuer or credential links.',
-      icon: BadgeCheck,
-    },
-    {
-      title: 'Open-source work',
-      description: 'Featured projects link directly to GitHub so reviewers can inspect the code and structure.',
-      icon: FolderGit2,
-    },
-    {
-      title: 'Public outreach',
-      description: 'Professional contact is kept public-safe through LinkedIn and GitHub, with no private contact details shown.',
-      icon: Monitor,
-    },
-  ],
+
   links: {
     github: 'https://github.com/talha-ghaffar-ch',
     linkedin: 'https://www.linkedin.com/in/talha-ghaffar/',
@@ -389,19 +369,15 @@ const HomeView = ({ onNavigate, isMobile }) => {
                 <Terminal size={20} className="text-orange-400" />
               </div>
 
-              <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 relative z-10 bg-slate-800 flex items-center justify-center text-center p-8">
-                <div>
-                  <p className="text-xs font-mono tracking-[0.3em] uppercase text-slate-400 mb-3">Public Portfolio</p>
-                  <p className="text-lg font-semibold text-white">Privacy-safe profile view</p>
-                  <p className="mt-2 text-sm text-slate-400">Public highlights, experience, projects, and certifications only.</p>
-                </div>
+              <div className="w-full h-full rounded-full overflow-hidden border-4 border-slate-900 relative z-10 bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center text-center">
+                <img src="/profile.jpg" alt="Talha Ghaffar" className="w-full h-full object-cover" />
               </div>
             </div>
           </FadeIn>
 
           <FadeIn delay={700} direction="up" className="w-full flex justify-center z-20">
             <div className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900/70 p-5 shadow-2xl">
-              <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-3">Public Profiles</p>
+              <p className="text-xs font-mono uppercase tracking-widest text-slate-500 mb-3">Connect</p>
               <div className="grid gap-3 sm:grid-cols-2">
                 <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950/70 px-3 py-3 text-slate-200 hover:border-sky-500/40 transition-colors">
                   <span>LinkedIn</span>
@@ -423,24 +399,7 @@ const HomeView = ({ onNavigate, isMobile }) => {
         </div>
       </FadeIn>
 
-      <FadeIn delay={1000} className="mt-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {cvData.proofPoints.map((item) => {
-            const ProofIcon = item.icon;
-            return (
-              <div key={item.title} className="rounded-2xl border border-slate-800 bg-slate-900/55 p-5 backdrop-blur-md shadow-[0_0_24px_rgba(6,182,212,0.04)]">
-                <div className="flex items-center gap-3 mb-3">
-                  <div className="rounded-lg border border-slate-800 bg-slate-950/70 p-2">
-                    <ProofIcon size={18} className="text-emerald-400" />
-                  </div>
-                  <h3 className="text-base font-bold text-white">{item.title}</h3>
-                </div>
-                <p className="text-sm text-slate-400 leading-relaxed">{item.description}</p>
-              </div>
-            );
-          })}
-        </div>
-      </FadeIn>
+
     </div>
   );
 };
@@ -462,20 +421,20 @@ const AboutView = () => (
 
         <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 backdrop-blur-md">
           <h3 className="text-lg font-bold text-white mb-4 flex items-center gap-2">
-            <Lock size={18} className="text-emerald-400" /> Public Snapshot
+            <Shield size={20} className="text-cyan-400" /> Quick Facts
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
             <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3">
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">Current Status</p>
-              <p className="text-slate-100">Final year Computer Science student at UMT</p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Education</p>
+              <p className="text-slate-100">Final year CS student at UMT</p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3">
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">Primary Focus</p>
-              <p className="text-slate-100">Cloud, Infrastructure, Cybersecurity</p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Focus</p>
+              <p className="text-slate-100">Cloud, Security, Infrastructure</p>
             </div>
             <div className="rounded-lg border border-slate-800 bg-slate-950/60 p-3 sm:col-span-2">
-              <p className="text-[10px] uppercase tracking-wider text-slate-500">Professional Scope</p>
-              <p className="text-slate-100">Web and mobile app development, security, and practical systems work</p>
+              <p className="text-[10px] uppercase tracking-wider text-slate-500">Experience</p>
+              <p className="text-slate-100">IT specialist and creative media manager at Pagri Studio</p>
             </div>
           </div>
         </div>
@@ -607,29 +566,7 @@ const ProjectsView = () => (
       </div>
     </div>
 
-    <FadeIn delay={320}>
-      <div className="rounded-2xl border border-slate-800 bg-gradient-to-r from-slate-900/80 via-slate-900/60 to-slate-900/80 p-6 md:p-8 backdrop-blur-md">
-        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-6">
-          <div>
-            <p className="text-xs font-mono tracking-wider text-emerald-300/90 mb-2">FEATURED WORK</p>
-            <h3 className="text-2xl font-bold text-white">Public proof is built into the portfolio.</h3>
-          </div>
-          <p className="text-sm text-slate-400 max-w-xl">Each highlighted project links to a public repository, so reviewers can verify the code instead of relying only on summary text.</p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {cvData.projects.map((project) => (
-            <div key={`${project.title}-proof`} className="rounded-xl border border-slate-800 bg-slate-950/55 p-4">
-              <div className="flex items-center justify-between gap-3 mb-2">
-                <h4 className="text-base font-semibold text-white">{project.title}</h4>
-                <CheckCircle size={16} className="text-emerald-400" />
-              </div>
-              <p className="text-sm text-slate-400 leading-relaxed">{project.description}</p>
-            </div>
-          ))}
-        </div>
-      </div>
-    </FadeIn>
   </div>
 );
 
@@ -677,7 +614,7 @@ const CertificationsView = () => (
       </div>
 
       <div className="lg:col-span-4 space-y-4">
-        <h3 className="text-sm font-mono text-slate-500 mb-4">PUBLIC LINKS</h3>
+        <h3 className="text-sm font-mono text-slate-500 mb-4">CONNECT</h3>
         <FadeIn delay={200}>
           <div className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6">
             <div className="grid gap-3">
@@ -693,19 +630,7 @@ const CertificationsView = () => (
           </div>
         </FadeIn>
 
-        <FadeIn delay={300}>
-          <div className="rounded-2xl border border-slate-800 bg-gradient-to-br from-emerald-500/10 via-slate-900/70 to-cyan-500/10 p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <Mail size={18} className="text-emerald-300" />
-              <h3 className="text-lg font-bold text-white">Public contact route</h3>
-            </div>
-            <p className="text-sm text-slate-400 leading-relaxed mb-4">For opportunities, use LinkedIn or GitHub messages so the site stays privacy-safe while still offering a direct professional channel.</p>
-            <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-emerald-500/50 px-3 py-2 text-xs font-mono text-emerald-200 hover:bg-emerald-500/15 transition-all">
-              Message on LinkedIn
-              <ExternalLink size={12} />
-            </a>
-          </div>
-        </FadeIn>
+
       </div>
     </div>
   </div>
@@ -739,7 +664,7 @@ export default function App() {
             </div>
             <div className="leading-tight">
               <span className="block text-[13px] sm:text-sm font-semibold tracking-wide text-white">{cvData.profile.name}</span>
-              <span className="block text-[10px] font-mono text-cyan-300/85">Public Portfolio</span>
+              <span className="block text-[10px] font-mono text-cyan-300/85">Portfolio</span>
             </div>
           </button>
 
@@ -776,9 +701,9 @@ export default function App() {
         <section className="mt-8 rounded-2xl border border-slate-800/80 bg-gradient-to-r from-slate-900/80 via-slate-900/70 to-slate-900/80 px-6 py-8 md:px-8 md:py-10 backdrop-blur-md shadow-[0_0_40px_rgba(16,185,129,0.08)]">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
             <div>
-              <p className="text-xs font-mono tracking-wider text-emerald-300/90 mb-2">READY TO REVIEW</p>
-              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Public portfolio only, no private contact data.</h3>
-              <p className="text-slate-400 max-w-2xl">The site keeps the public CV content while omitting private fields like phone, email, birth data, and home address.</p>
+              <p className="text-xs font-mono tracking-wider text-emerald-300/90 mb-2">LET'S TALK</p>
+              <h3 className="text-2xl md:text-3xl font-bold text-white mb-2">Reach out through LinkedIn or GitHub.</h3>
+              <p className="text-slate-400 max-w-2xl">I'm available for opportunities in cloud computing, cybersecurity, infrastructure, and full-stack development.</p>
             </div>
             <div className="flex flex-wrap gap-3">
               <a href={cvData.links.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 rounded-md border border-emerald-500/60 bg-emerald-500/15 px-4 py-2.5 text-sm font-semibold text-emerald-200 hover:bg-emerald-500/25 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-300/70">
